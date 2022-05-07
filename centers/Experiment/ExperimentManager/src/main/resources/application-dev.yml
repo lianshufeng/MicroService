@@ -1,0 +1,22 @@
+
+spring:
+  cloud:
+#    #配置计算机名
+#    consul:
+#      discovery:
+#        hostname: 192.168.8.181   # 配置实例地址
+    inetutils:
+      preferred-networks:
+        - 192.168
+  data:
+    mongodb:
+      uri: mongodb://experiment:experiment@192.168.8.226:27017,192.168.8.226:27018,192.168.8.226:27019,192.168.8.226:27020/experiment?replicaSet=MongoSets
+      auto-index-creation: true
+
+
+#logging:
+#  level:
+#    org:
+#      springframework: trace
+#debug: true
+#trace: true
