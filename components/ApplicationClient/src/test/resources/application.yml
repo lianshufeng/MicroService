@@ -1,0 +1,72 @@
+#默认端口号
+server:
+  port: 8080
+
+#允许消息总线
+spring:
+  application:
+    name: ApplicationClient
+  cloud:
+    consul:
+      config:
+        enabled: false
+      discovery:
+        health-check-path: /actuator/health  # 检测实例健康
+        health-check-interval: 10s   # 每隔10s检查
+        hostname: 192.168.31.222    # 配置实例地址
+        port: ${server.port}
+        register: true  # 自动注册
+        service-name: ${spring.application.name} # 实例名称
+        instance-id: ${spring.application.name}:${server.port}
+      host: 192.168.63.130
+      port: 8500
+    #kafka
+    stream:
+      kafka:
+        binder:
+          brokers: 192.168.63.130
+          replication-factor: 1
+    bus:
+      enabled: true
+  #配置zipkin链路追踪客户端
+  zipkin:
+    base-url: http://192.168.63.130:9411
+    enabled: true
+    sender:
+      type: web
+  sleuth:
+    sampler:
+      probability: 0.1
+
+
+#允许端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        exclude: "env,beans"
+
+
+
+
+#开启断路器
+#feign.hystrix.enabled=true
+
+
+
+
+#调试或者输出日志
+logging:
+  file:
+    name: logs/applicationclient.log
+  level:
+    org:
+      springframework:
+        cloud:
+          sleuth: DEBUG
+        web:
+          servlet:
+            DispatcherServlet: DEBUG
+
+debug: true

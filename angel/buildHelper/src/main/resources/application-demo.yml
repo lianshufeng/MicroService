@@ -1,0 +1,12 @@
+build:
+  task:
+    core-project: IT/MicroService
+  git:
+    type: Gogs
+    core: MicroService
+    host: http://ccc.com
+    userName: user
+    passWord: pass
+    token: xxxx
+  maven:
+    home: "/opt/maven/apache-maven-3.6.3"

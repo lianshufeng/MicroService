@@ -1,0 +1,14 @@
+version: '3.1'
+
+services:
+  redis:
+    image: redis
+    restart: always
+    hostname: redis
+    container_name: redis
+    volumes:
+      - ./store:/data
+      - ./redis.conf:/conf/redis.conf
+    command: redis-server /conf/redis.conf
+    ports:
+      - 6379:6379

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.github.microservice</groupId>
+    <artifactId>centers</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <packaging>pom</packaging>
+    <name>${project.artifactId}</name>
+    <description>项目配置</description>
+
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+    </properties>
+
+
+    <modules>
+
+
+        <!-- 平台 -->
+        <!--        <module>ApplicationCenter/Discovery</module>-->
+        <module>ApplicationCenter/Gateway</module>
+        <module>ApplicationCenter/Config</module>
+
+        <!-- 鉴权中心 -->
+        <module>AuthCenter</module>
+
+        <!-- 实验室-灰度环境 -->
+        <module>Experiment</module>
+
+
+    </modules>
+
+
+</project>

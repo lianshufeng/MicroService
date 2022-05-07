@@ -1,0 +1,9 @@
+spring:
+  cloud:
+    stream:
+      function:
+        definition: consumer #定义spring的bean的name
+      bindings:
+        consumer-in-0: # consumer-in-0 (beanName-in|out-0[序号])
+          destination: test-stream #从指定的stream的topic名
+          group: test-stream

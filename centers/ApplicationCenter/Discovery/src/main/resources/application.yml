@@ -1,0 +1,34 @@
+#随机端口
+server:
+  port: 0
+
+#允许消息总线
+spring:
+  application:
+    name: ${project.artifactId}
+  cloud:
+    consul:
+      discovery:
+        hostname: localhost    # 配置实例地址
+        port: ${server.port}
+        health-check-path: /actuator/health  # 检测实例健康
+        health-check-interval: 10s   # 每隔10s检查
+        register: true  # 自动注册
+        service-name: ${spring.application.name} # 实例名称
+        instance-id: ${spring.application.name}:${server.port}
+      host: ${ApplicationCenter.url}
+      port: ${ApplicationCenter.port}
+
+
+
+
+
+
+
+
+
+#调试或者输出日志
+logging:
+  file:
+    name: logs/${project.artifactId}.log
+#debug: true

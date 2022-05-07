@@ -1,0 +1,85 @@
+#默认端口号
+server:
+  port: 8080
+
+#允许消息总线
+spring:
+  application:
+    name: ${project.artifactId}
+  cloud:
+    consul:
+      config:
+        enabled: false
+      discovery:
+        health-check-path: /actuator/health  # 检测实例健康
+        health-check-interval: 10s   # 每隔10s检查
+        hostname: localhost    # 配置实例地址
+        port: ${server.port}
+        register: true  # 自动注册
+        service-name: ${spring.application.name} # 实例名称
+        instance-id: ${spring.application.name}:${server.port}
+      host: 127.0.0.1
+      port: ${ApplicationCenter.port}
+    #kafka
+    stream:
+      kafka:
+        binder:
+          brokers: ${Kafka.brokers}
+          replication-factor: 1
+      function:
+        definition: authEventStreamConsumer
+      bindings:
+        authEventStreamConsumer-in-0:
+          destination: AuthEventStream
+          group: null
+    bus:
+      enabled: true
+  #配置zipkin链路追踪客户端
+  zipkin:
+    base-url: ${Zipkin.baseUrl}
+    enabled: true
+    sender:
+      type: web
+  sleuth:
+    sampler:
+      probability: ${Zipkin.sampler.probability}
+  cache: #缓存配置
+    caffeine:
+      spec: maximumSize=9999,expireAfterWrite=36000s
+    type: caffeine
+    cache-names:
+      - UserToken
+
+#允许端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        exclude: "env,beans"
+
+
+
+
+#开启断路器
+feign:
+  hystrix:
+    enabled: true
+
+
+
+
+#调试或者输出日志
+logging:
+  file: 
+    name: logs/${project.artifactId}.log
+#  level:
+#    org:
+#      springframework:
+#        cloud:
+#          sleuth: DEBUG
+#        web:
+#          servlet:
+#            DispatcherServlet: DEBUG
+
+#debug: true

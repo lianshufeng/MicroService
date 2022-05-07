@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  kafka:
+    image: lianshufeng/kafka
+    ports:
+      - "9092:9092"
+      - "2181:2181"
+    volumes:
+      - ${store}/data/logs:/opt/kafka/logs
+      - ${store}/data/kafka_logs:/tmp/kafka-logs
+      - ${store}/data/zookeeper:/tmp/zookeeper
+    container_name: kafka
+    restart: always
+    environment:
+      - KAFKA_LISTENERS=${KAFKA_HOST}:9092
+
+
+
+
+  #sudo firewall-cmd --add-port=2181/tcp --permanent
+  #sudo firewall-cmd --add-port=9092/tcp --permanent
+  #firewall-cmd --reload
+
+
+
+

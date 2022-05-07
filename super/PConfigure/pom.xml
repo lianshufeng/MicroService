@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+
+    <modelVersion>4.0.0</modelVersion>
+
+
+    <groupId>com.github.microservice</groupId>
+    <artifactId>PConfigure</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+
+    <properties>
+        <!-- 项目编码 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!--JDK版本-->
+        <java.version>11</java.version>
+
+        <!--spring cloud 版本-->
+        <spring-mvc.version>5.3.19</spring-mvc.version>
+
+        <!-- auth2.0-->
+        <spring-security-core.version>5.6.3</spring-security-core.version>
+        <spring-security-oauth2.version>2.5.2.RELEASE</spring-security-oauth2.version>
+        <!--        <spring-security-oauth2.version>2.3.8.RELEASE</spring-security-oauth2.version>-->
+
+        <spring-boot-starter-security.version>2.6.7</spring-boot-starter-security.version>
+        <spring-security-oauth2-authorization-server.version>0.1.1</spring-security-oauth2-authorization-server.version>
+
+
+        <spring-cloud-dependencies.version>2021.0.2</spring-cloud-dependencies.version>
+        <spring-cloud.version>3.1.2</spring-cloud.version>
+        <spring-cloud-starter-stream.version>3.2.3</spring-cloud-starter-stream.version>
+        <spring-cloud-bus.version>3.1.0</spring-cloud-bus.version>
+        <spring-cloud-starter-config.version>3.1.2</spring-cloud-starter-config.version>
+        <spring-cloud-starter-consul-discovery.version>3.1.0</spring-cloud-starter-consul-discovery.version>
+
+        <spring-boot.version>2.6.7</spring-boot.version>
+        <spring-boot-starter-data-jpa.version>2.6.7</spring-boot-starter-data-jpa.version>
+
+        <spring-data-jpa.version>2.6.4</spring-data-jpa.version>
+
+        <spring-integration-core.version>5.5.11</spring-integration-core.version>
+
+        <!-- 依赖组件 -->
+<!--        <ribbon.version>2.7.18.RELEASE</ribbon.version>-->
+<!--        <netflix.version>3.0.3</netflix.version>-->
+        <netflix-zuul.version>2.2.10.RELEASE</netflix-zuul.version>
+        <netflix-hystrix.version>2.2.10.RELEASE</netflix-hystrix.version>
+        <netflix-ribbon.version>2.2.10.RELEASE</netflix-ribbon.version>
+
+
+        <feign.version>11.8</feign.version>
+
+
+        <!-- 其他工具版本 -->
+        <groovy.version>3.0.9</groovy.version> <!-- 3.0.10 拷贝方法注解会出现重复 -->
+        <ehcache.version>3.10.0</ehcache.version>
+        <caffeine.version>3.1.0</caffeine.version>
+        <lombok.version>1.18.24</lombok.version>
+        <httpclient.version>4.5.13</httpclient.version>
+        <commons-lang3.version>3.12.0</commons-lang3.version>
+        <junit.version>4.13.2</junit.version>
+        <javax.servlet.jsp-api.version>2.3.3</javax.servlet.jsp-api.version>
+        <servlets-ssi.version>5.0.16</servlets-ssi.version>
+        <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
+        <commons-fileupload.version>1.4</commons-fileupload.version>
+        <jstl.version>1.2</jstl.version>
+        <gson.version>2.9.0</gson.version>
+        <jackson.version>2.13.2</jackson.version>
+        <commons-beanutils.version>1.9.4</commons-beanutils.version>
+        <hibernate.version>5.6.8.Final</hibernate.version>
+        <jaxb-api.version>2.3.1</jaxb-api.version>
+        <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
+
+
+        <!--链路追踪-->
+        <zipkin.version>2.2.8.RELEASE</zipkin.version>
+
+
+        <!-- 插件 -->
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>
+        <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
+        <maven-war-plugin.version>3.3.1</maven-war-plugin.version>
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+
+        <!--项目版本-->
+        <Project.version>1.0.0-SNAPSHOT</Project.version>
+        <Project.groupId>com.github.microservice</Project.groupId>
+
+        <!-- 注册发现服务端口 -->
+        <ApplicationCenter.port>8500</ApplicationCenter.port>
+
+
+        <!-- 网关端口-->
+        <GetWayCenter.port>80</GetWayCenter.port>
+
+
+        <!--开放平台-->
+        <OpenApi.port>7900</OpenApi.port>
+
+        <!-- 配置中心 -->
+        <ConfigCenter.port>8000</ConfigCenter.port>
+
+        <!--用户中心-->
+        <UserCenter.port>8100</UserCenter.port>
+
+        <!--推送中心-->
+        <PushCenter.port>8300</PushCenter.port>
+
+
+        <!--文件中心-->
+        <FileCenter.port>8400</FileCenter.port>
+
+
+        <!--机器人验证码端口-->
+        <RobotFirewall.port>8600</RobotFirewall.port>
+
+        <!--权限中心-->
+        <AuthCenter.port>8700</AuthCenter.port>
+
+        <!--MQ中心-->
+        <MQCenter.port>8800</MQCenter.port>
+
+        <!--支付中心-->
+        <PayCenter.port>8900</PayCenter.port>
+
+
+    </properties>
+
+
+    <profiles>
+
+
+        <!--开发环境-->
+        <profile>
+            <id>dev</id>
+
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
+            <properties>
+                <spring.profiles.active>dev</spring.profiles.active>
+
+                <ApplicationCenter.url>192.168.8.225:8500,192.168.8.225:8501,192.168.8.225:8502</ApplicationCenter.url>
+                <ConfigCenter.url>http://192.168.8.225:${ConfigCenter.port}</ConfigCenter.url>
+                <Kafka.brokers>192.168.8.226:9092,192.168.8.226:9093,192.168.8.226:9094</Kafka.brokers>
+                <Zipkin.baseUrl>http://192.168.8.226:9411</Zipkin.baseUrl>
+                <Zipkin.sampler.probability>0.01</Zipkin.sampler.probability>
+            </properties>
+        </profile>
+
+        <!--测试环境-->
+        <profile>
+            <id>test</id>
+            <properties>
+                <spring.profiles.active>test</spring.profiles.active>
+
+                <ApplicationCenter.url>192.168.63.132</ApplicationCenter.url>
+                <ConfigCenter.url>http://192.168.63.132:${ConfigCenter.port}</ConfigCenter.url>
+                <Kafka.brokers>192.168.63.132:9092,192.168.63.132:9093,192.168.63.132:9094</Kafka.brokers>
+                <Zipkin.baseUrl>http://192.168.63.132:9411</Zipkin.baseUrl>
+                <Zipkin.sampler.probability>0.01</Zipkin.sampler.probability>
+            </properties>
+        </profile>
+
+        <!--生产环境-->
+        <profile>
+            <id>prod</id>
+            <properties>
+                <spring.profiles.active>prod</spring.profiles.active>
+
+                <ApplicationCenter.url>172.28.95.160:8500,172.28.95.160:8501,172.28.95.160:8502</ApplicationCenter.url>
+                <ConfigCenter.url>http://172.28.95.160:${ConfigCenter.port}</ConfigCenter.url>
+                <Kafka.brokers>172.27.127.15:9092</Kafka.brokers>
+                <Zipkin.baseUrl>http://172.27.127.14:9411</Zipkin.baseUrl>
+                <Zipkin.sampler.probability>0.01</Zipkin.sampler.probability>
+            </properties>
+        </profile>
+    </profiles>
+
+
+    <!--Spring Cloud-->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud-dependencies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+    <repositories>
+
+        <!-- 阿里-->
+        <repository>
+            <id>nexus</id>
+            <name>nexus</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+
+
+        <repository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+
+    </repositories>
+
+
+    <pluginRepositories>
+
+        <!-- Needed for latest Groovy Eclipse version -->
+        <pluginRepository>
+            <id>nexus</id>
+            <name>nexus</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </pluginRepository>
+
+
+        <!-- Needed for latest Groovy Eclipse version -->
+        <pluginRepository>
+            <id>bintray</id>
+            <name>Groovy Bintray</name>
+            <url>https://dl.bintray.com/groovy/maven</url>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+
+</project>

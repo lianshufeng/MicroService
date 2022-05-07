@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>PParent</artifactId>
+        <groupId>com.github.microservice</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../../../super/PParent</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.github.microservice.components</groupId>
+    <artifactId>MongodbData</artifactId>
+
+
+    <properties>
+        <mongo-java-driver.version>3.12.11</mongo-java-driver.version>
+        <mongodb-driver-sync.version>4.6.0</mongodb-driver-sync.version>
+        <spring-data-mongodb.version>3.3.4</spring-data-mongodb.version>
+    </properties>
+
+    <dependencies>
+
+        <!-- 通用basedata -->
+        <dependency>
+            <groupId>com.github.microservice.components</groupId>
+            <artifactId>BaseData</artifactId>
+            <version>${Project.version}</version>
+        </dependency>
+
+
+        <!-- db -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-mongodb</artifactId>
+            <version>${spring-data-mongodb.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-data-commons</artifactId>
+                    <groupId>org.springframework.data</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+            <version>${spring-boot.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mongodb</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+<!--        驱动-->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>${mongodb-driver-sync.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-core</artifactId>
+            <version>${mongodb-driver-sync.version}</version>
+        </dependency>
+
+
+
+
+
+    </dependencies>
+
+
+</project>

@@ -1,0 +1,75 @@
+#默认端口号
+server:
+  port: ${GetWayCenter.port}
+  max-http-header-size: 10MB
+
+#允许消息总线
+spring:
+  cloud:
+    consul:
+      discovery:
+        prefer-ip-address: true # ip自动注册
+        hostname: localhost    # 配置实例地址
+        port: ${server.port}
+        health-check-path: /actuator/health  # 检测实例健康
+        health-check-interval: 10s   # 每隔10s检查
+        register: true  # 自动注册
+        service-name: ${spring.application.name} # 实例名称
+        instance-id: ${spring.application.name}:${server.port}
+      host: ${ApplicationCenter.url}
+      port: ${ApplicationCenter.port}
+
+    gateway:
+      filters:
+        - name: RequestSize
+          args:
+            maxSize: 104857600
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true #重要，转换为大写访问服务
+      httpclient:
+        #超时
+        connect-timeout: 3000
+        response-timeout: 120s
+      routes:
+        - id: ucenter
+          uri: lb://userserver/ucenter
+          predicates:
+            - Path=/ucenter/**
+    #kafka
+    stream:
+      kafka:
+        binder:
+          brokers: ${Kafka.brokers}
+    bus:
+      enabled: true
+  #配置zipkin链路追踪客户端
+  zipkin:
+    base-url: ${Zipkin.baseUrl}
+    enabled: true
+    sender:
+      type: web
+  sleuth:
+    sampler:
+      probability: ${Zipkin.sampler.probability}
+
+
+
+
+#调试或者输出日志
+#debug: true
+#trace: true
+logging:
+  file:
+    name: logs/${project.artifactId}.log
+#  level:
+#    com:
+#      fast:
+#        dev:
+#          getway:
+#            core: debug
+#    org:
+#      springframework:
+#        cloud:
+#          netflix: trace
