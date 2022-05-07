@@ -61,7 +61,7 @@ public class ExperimentController {
             // 用户id
             @ApiParam(name = "uid", value = "用户id", example = ExampleConstant.UserId) @RequestParam(value = "uid") String uid,
             // 业务名
-            @ApiParam(name = "serviceName", value = "业务名", example = "service1") @RequestParam(value = "serviceName") String serviceName
+            @ApiParam(name = "serviceName", value = "业务名", example = ExampleConstant.service1) @RequestParam(value = "serviceName") String serviceName
     ) {
         return ResultContent.buildContent(experimentService.queryByUidAndServiceName(uid, serviceName));
     }

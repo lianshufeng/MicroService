@@ -15,7 +15,7 @@ import java.util.Map;
 @Document
 public class Experiment extends SuperEntity {
 
-    //用户组名
+    //环境名
     @Indexed(unique = true)
     private String name;
 
