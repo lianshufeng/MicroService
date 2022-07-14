@@ -26,6 +26,14 @@ public interface RoleDao extends MongoDao<Role>, RoleDaoExtend {
      */
     boolean existsByEnterpriseAndName(Enterprise enterprise, String name);
 
+    /**
+     * 角色组总是否存在
+     *
+     * @param name
+     * @return
+     */
+    Role findTop1ByEnterpriseAndName(Enterprise enterprise, String name);
+
 
     /**
      * 根据角色名查询角色

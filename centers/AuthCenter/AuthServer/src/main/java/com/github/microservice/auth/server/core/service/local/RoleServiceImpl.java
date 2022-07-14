@@ -90,9 +90,9 @@ public class RoleServiceImpl implements RoleService {
             return ResultContent.build(ResultState.RoleNotExists);
         }
         //目标角色名存在
-        if (this.roleDao.existsByEnterpriseAndName(role.getEnterprise(), roleModel.getName())) {
+        /*if (this.roleDao.existsByEnterpriseAndName(role.getEnterprise(), roleModel.getName())) {
             return ResultContent.build(ResultState.RoleExists);
-        }
+        }*/
 
         if (StringUtils.hasText(roleModel.getEnterpriseId()) && !role.getEnterprise().getId().equals(roleModel.getEnterpriseId())) {
             return ResultContent.build(ResultState.RoleEnterpriseDoNotUpdate);
@@ -171,6 +171,12 @@ public class RoleServiceImpl implements RoleService {
         return ResultContent.buildContent(toRoleModel(this.roleDao.findTop1ById(roleId)));
     }
 
+    @Override
+    public ResultContent<RoleModel> getRoleByName(String roleName, String enterpriseId) {
+        Role role = roleDao.findTop1ByEnterpriseAndName(Enterprise.build(enterpriseId), roleName);
+        return ResultContent.buildContent(toRoleModel(role));
+    }
+
 
     // ---------------- 角色组 ------------
 
@@ -202,9 +208,9 @@ public class RoleServiceImpl implements RoleService {
             return ResultContent.build(ResultState.RoleGroupNotExists);
         }
         //目标角色名存在
-        if (this.roleGroupDao.existsByEnterpriseAndName(roleGroup.getEnterprise(), roleGroupModel.getName())) {
+        /*if (this.roleGroupDao.existsByEnterpriseAndName(roleGroup.getEnterprise(), roleGroupModel.getName())) {
             return ResultContent.build(ResultState.RoleGroupExists);
-        }
+        }*/
 
         if (StringUtils.hasText(roleGroupModel.getEnterpriseId()) && !roleGroup.getEnterprise().getId().equals(roleGroupModel.getEnterpriseId())) {
             return ResultContent.build(ResultState.RoleGroupEnterpriseDoNotUpdate);
@@ -287,6 +293,12 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public ResultContent<RoleGroupModel> getRoleGroup(String roleGroupId) {
         return ResultContent.buildContent(toRoleGroupModel(this.roleGroupDao.findTop1ById(roleGroupId)));
+    }
+
+    @Override
+    public ResultContent<RoleGroupModel> getRoleGroupByName(String roleGroupName, String enterpriseId) {
+        RoleGroup roleGroup = roleGroupDao.findTop1ByEnterpriseAndName(Enterprise.build(enterpriseId), roleGroupName);
+        return ResultContent.buildContent(toRoleGroupModel(roleGroup));
     }
 
     @Override

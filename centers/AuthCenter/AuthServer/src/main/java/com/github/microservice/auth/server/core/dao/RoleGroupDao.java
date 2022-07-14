@@ -57,6 +57,8 @@ public interface RoleGroupDao extends MongoDao<RoleGroup>, RoleGroupDaoExtend {
     boolean existsByEnterpriseAndName(Enterprise enterprise, String name);
 
 
+    RoleGroup findTop1ByEnterpriseAndName(Enterprise enterprise, String name);
+
     /**
      * 通过id查询角色组
      *

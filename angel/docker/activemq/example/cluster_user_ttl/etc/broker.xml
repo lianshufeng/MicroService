@@ -252,20 +252,25 @@ under the License.
             <!-- with -1 only the global-max-size is in use for limiting -->
             <max-size-bytes>-1</max-size-bytes>
             <message-counter-history-day-limit>14</message-counter-history-day-limit>
-            <address-full-policy>PAGE</address-full-policy>
+
+            <expiry-delay>10000</expiry-delay>
+
+            <address-full-policy>DROP</address-full-policy>
             <auto-create-queues>true</auto-create-queues>
             <auto-create-addresses>true</auto-create-addresses>
             <auto-create-jms-queues>true</auto-create-jms-queues>
             <auto-create-jms-topics>true</auto-create-jms-topics>
-            
-			<auto-delete-queues>true</auto-delete-queues>
-			<auto-delete-queues-delay>60000</auto-delete-queues-delay>
+
+            <auto-delete-queues>true</auto-delete-queues>
+            <auto-delete-created-queues>true</auto-delete-created-queues>
+            <auto-delete-queues-message-count>-1</auto-delete-queues-message-count>
+            <auto-delete-queues-delay>10000</auto-delete-queues-delay>
 
             <auto-delete-addresses>true</auto-delete-addresses>
-			<auto-delete-addresses-delay>60000</auto-delete-addresses-delay>
-			
-			<config-delete-queues>FORCE</config-delete-queues>
-			<config-delete-addresses>FORCE</config-delete-addresses>
+            <auto-delete-addresses-delay>1000</auto-delete-addresses-delay>
+
+            <config-delete-queues>FORCE</config-delete-queues>
+            <config-delete-addresses>FORCE</config-delete-addresses>
 			
          </address-setting>
 		 

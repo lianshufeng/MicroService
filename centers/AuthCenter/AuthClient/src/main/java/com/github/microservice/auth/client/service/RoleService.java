@@ -41,6 +41,13 @@ public interface RoleService {
             @ApiParam(name = "roleId", value = "角色id", example = ExampleConstant.RoleId) @RequestParam("roleId") String roleId
     );
 
+    @ApiOperation(value = "通过名称查询一个角色", notes = "查询角色", consumes = MediaType.ALL_VALUE)
+    @RequestMapping(value = "getRoleByName", consumes = {MediaType.ALL_VALUE}, method = RequestMethod.POST)
+    ResultContent<RoleModel> getRoleByName(
+            @ApiParam(name = "roleName", value = "角色名称", example = ExampleConstant.RoleId) @RequestParam("roleName") String roleName,
+            @ApiParam(name = "enterpriseId", value = "企业id", example = ExampleConstant.EnterpriseId) @RequestParam("enterpriseId") String enterpriseId
+    );
+
     //--------------- 角色组 -------------------
     @ApiOperation(value = "更新角色组", notes = "更新角色组", consumes = "application/json")
     @RequestMapping(value = "updateRoleGroup", method = RequestMethod.POST)
@@ -56,6 +63,13 @@ public interface RoleService {
     @RequestMapping(value = "getRoleGroup", consumes = {MediaType.ALL_VALUE}, method = RequestMethod.POST)
     ResultContent<RoleGroupModel> getRoleGroup(
             @ApiParam(name = "roleGroupId", value = "角色组id", example = ExampleConstant.RoleGroupId) @RequestParam("roleGroupId") String roleGroupId
+    );
+
+    @ApiOperation(value = "通过名称查询一个角色组", notes = "查询角色", consumes = MediaType.ALL_VALUE)
+    @RequestMapping(value = "getRoleGroupByName", consumes = {MediaType.ALL_VALUE}, method = RequestMethod.POST)
+    ResultContent<RoleGroupModel> getRoleGroupByName(
+            @ApiParam(name = "roleGroupName", value = "角色组名称", example = ExampleConstant.RoleId) @RequestParam("roleGroupName") String roleGroupName,
+            @ApiParam(name = "enterpriseId", value = "企业id", example = ExampleConstant.EnterpriseId) @RequestParam("enterpriseId") String enterpriseId
     );
 
 

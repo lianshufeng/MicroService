@@ -1,8 +1,9 @@
 spring:
   activemq:
 #    broker-url: failover:(tcp://192.168.8.226:61616?connectionTimeout=1000,tcp://192.168.8.226:61626?connectionTimeout=1000,tcp://192.168.8.226:61636?connectionTimeout=1000)?timeout=3000
-    broker-url: failover:(tcp://192.168.8.226:61616?connectionTimeout=1000,tcp://192.168.8.226:61626?connectionTimeout=1000,tcp://192.168.8.226:61636?connectionTimeout=1000)?timeout=3000
+#    broker-url: failover:(tcp://192.168.8.226:61616?connectionTimeout=1000,tcp://192.168.8.226:61626?connectionTimeout=1000,tcp://192.168.8.226:61636?connectionTimeout=1000)?timeout=3000
+    broker-url: failover:(tcp://172.27.127.14:61616?connectionTimeout=1000,tcp://172.27.127.14:61626?connectionTimeout=1000,tcp://172.27.127.14:61636?connectionTimeout=1000)?timeout=3000
     #用户名
     user: admin
     #密码
-    password: password
+    password: 5XQxLV8k909ppNGm

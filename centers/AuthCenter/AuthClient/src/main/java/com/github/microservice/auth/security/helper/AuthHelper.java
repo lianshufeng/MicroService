@@ -14,6 +14,9 @@ public class AuthHelper {
     @Autowired
     private UserLogHelper userLogHelper;
 
+    @Autowired
+    private AuthClientSecurityAuthenticationHelper authClientSecurityAuthenticationHelper;
+
 
     /**
      * 获取当前用户
@@ -31,6 +34,28 @@ public class AuthHelper {
         }
         return null;
     }
+
+
+    /**
+     * 拿到 用户令牌
+     *
+     * @return
+     */
+    public String getUserToken() {
+        return this.authClientSecurityAuthenticationHelper.getUserToken();
+    }
+
+
+    /**
+     * 获取企业id
+     *
+     * @return
+     */
+    public String getEnterPriseId() {
+        return this.authClientSecurityAuthenticationHelper.getEnterPriseId();
+    }
+
+
 
 
     /**

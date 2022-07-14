@@ -6,6 +6,7 @@ public enum AuthType {
     User("ur", "用户"),
     Enterprise("ep", "企业"),
     Platform("pf", "平台"),
+    Project("pj", "项目"),
 
 
     ;

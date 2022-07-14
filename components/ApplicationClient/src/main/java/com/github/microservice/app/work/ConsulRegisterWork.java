@@ -59,7 +59,7 @@ public class ConsulRegisterWork implements ApplicationRunner {
     private void registerWork() {
         //如果没有注册，则自动注册一个
         if (!consulClient.getAgentServices().getValue().keySet().contains(this.consulHelper.getInstance())) {
-            log.info("registerWork : {}", this.consulHelper.getInstance());
+            log.debug("registerWork : {}", this.consulHelper.getInstance());
             consulServiceRegistry.register(consulRegistration);
         }
     }

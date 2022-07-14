@@ -50,6 +50,20 @@ public class ResponseUtil {
     }
 
     /**
+     * 添加响应头
+     *
+     * @param extName
+     */
+    public static void addMimeType(HttpServletResponse response, String extName) {
+        MimeType mimetype = extNameMimeMap.get(extName);
+        //根据不同的类型进行处理
+        if (mimetype != null) {
+            response.addHeader(HttpHeaders.CONTENT_TYPE, mimetype.getName());
+        }
+    }
+
+
+    /**
      * 写出流
      *
      * @param response

@@ -58,10 +58,11 @@ public class ResourcesAuthHelper {
      * @param methodInfo
      */
     public boolean appendResourceInfo(ResourceInfo methodInfo) {
+        String key = methodInfo.getAuthType() + "_" +methodInfo.getName();
         if (StringUtils.hasText(methodInfo.getRemark())) {
-            this.resourceInfoMap.put(methodInfo.getName(), methodInfo);
-        } else if (!this.resourceInfoMap.containsKey(methodInfo.getName())) {
-            this.resourceInfoMap.put(methodInfo.getName(), methodInfo);
+            this.resourceInfoMap.put(key, methodInfo);
+        } else if (!this.resourceInfoMap.containsKey(key)) {
+            this.resourceInfoMap.put(key, methodInfo);
         }
         return true;
     }
