@@ -1,5 +1,6 @@
 package com.github.microservice.components.data.mongo.mongo.helper;
 
+import com.github.microservice.components.data.base.helper.TransactionHelper;
 import com.github.microservice.components.data.mongo.mongo.domain.SuperEntity;
 import lombok.Getter;
 import lombok.Setter;

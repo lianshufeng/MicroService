@@ -1,10 +1,9 @@
 package com.github.microservice.components.data.mongo.token.service.impl;
 
-import com.github.microservice.components.data.mongo.mongo.helper.TransactionHelper;
+import com.github.microservice.components.data.mongo.mongo.helper.DBHelper;
 import com.github.microservice.components.data.mongo.token.dao.ResourceTokenDao;
 import com.github.microservice.components.data.mongo.token.domain.ResourceToken;
 import com.github.microservice.components.data.mongo.token.service.ResourceTokenService;
-import com.github.microservice.components.data.mongo.mongo.helper.DBHelper;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,8 +38,8 @@ public class ResourceTokenServiceImpl extends ResourceTokenService {
     @Autowired
     private DBHelper dbHelper;
 
-    @Autowired
-    private TransactionHelper transactionHelper;
+//    @Autowired
+//    private TransactionHelper transactionHelper;
 
     //资源超时时间
     private static final long ResourceTokenTimeOut = 1000 * 60;
@@ -210,7 +209,7 @@ public class ResourceTokenServiceImpl extends ResourceTokenService {
      * @param token
      */
     protected void removeRemoteLockToken(LockTokenImpl token) {
-        this.transactionHelper.noTransaction(() -> {
+        this.dbHelper.noTransaction(() -> {
             this.resourceTokenDao.removeByResourceNameAndCounterAndType(token.getResourceName(), token.getCounter(), ResourceToken.ResourceType.User);
         });
     }
@@ -261,7 +260,7 @@ public class ResourceTokenServiceImpl extends ResourceTokenService {
      */
     private long addRecord(String resourceName) {
         long[] ts = new long[1];
-        this.transactionHelper.noTransaction(() -> {
+        this.dbHelper.noTransaction(() -> {
             long counter = this.resourceTokenDao.counter(resourceName);
             this.resourceTokenDao.record(resourceName, counter, ttlTime());
             ts[0] = counter;

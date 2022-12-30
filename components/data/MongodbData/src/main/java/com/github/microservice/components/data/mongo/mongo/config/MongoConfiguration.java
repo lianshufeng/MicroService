@@ -1,5 +1,6 @@
 package com.github.microservice.components.data.mongo.mongo.config;
 
+import com.github.microservice.components.data.base.config.PaginationConfiguration;
 import com.github.microservice.components.data.mongo.mongo.config.converts.BigDecimalToDecimal128Converter;
 import com.github.microservice.components.data.mongo.mongo.config.converts.Decimal128ToBigDecimalConverter;
 import com.mongodb.ReadPreference;
@@ -8,6 +9,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
@@ -26,8 +28,9 @@ import java.util.List;
  */
 @Configuration
 @EnableMongoAuditing
-@ComponentScan("com.github.microservice.components.data.mongo.mongo")
+@ComponentScan({"com.github.microservice.components.data.mongo.mongo","com.github.microservice.components.data.base.helper"})
 @EnableMongoRepositories("com.github.microservice.components.data.mongo.mongo.dao")
+@Import(PaginationConfiguration.class)
 public class MongoConfiguration {
 
 

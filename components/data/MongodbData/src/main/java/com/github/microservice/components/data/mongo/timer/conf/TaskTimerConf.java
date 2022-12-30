@@ -22,4 +22,7 @@ public class TaskTimerConf {
     //通知事件的最大线数量
     private int maxThreadPoolCount = SystemUtil.getCpuCoreCount() * 2;
 
+    //调度器执行锁定时间(防止并发)
+    private long executeLockTIme = 1000L * 60;
+
 }

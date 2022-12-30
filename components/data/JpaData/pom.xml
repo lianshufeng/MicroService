@@ -15,9 +15,9 @@
 
 
     <properties>
-        <Hsqldb.version>2.6.0</Hsqldb.version>
-        <JodaTime.version>2.10.10</JodaTime.version>
-        <mybatis.version>2.2.0</mybatis.version>
+        <Hsqldb.version>2.7.0</Hsqldb.version>
+        <JodaTime.version>2.11.1</JodaTime.version>
+        <mybatis.version>2.2.2</mybatis.version>
     </properties>
 
 
@@ -44,6 +44,12 @@
             <version>${Hsqldb.version}</version>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>org.hibernate</groupId>-->
+<!--            <artifactId>hibernate-entitymanager</artifactId>-->
+<!--            <version>5.6.11.Final</version>-->
+<!--        </dependency>-->
+
         <!--spring 数据源-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -60,11 +66,11 @@
 
 
         <!--  JDBC 驱动-->
-        <!--<dependency>-->
-        <!--<groupId>mysql</groupId>-->
-        <!--<artifactId>mysql-connector-java</artifactId>-->
-        <!--<version>8.0.12</version>-->
-        <!--</dependency>-->
+<!--        <dependency>-->
+<!--        <groupId>mysql</groupId>-->
+<!--        <artifactId>mysql-connector-java</artifactId>-->
+<!--        <version>8.0.30</version>-->
+<!--        </dependency>-->
 
 
     </dependencies>

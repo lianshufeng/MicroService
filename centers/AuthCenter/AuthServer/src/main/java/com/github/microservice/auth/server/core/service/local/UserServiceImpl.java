@@ -263,22 +263,13 @@ public class UserServiceImpl implements UserService {
         final OAuth2Request oAuth2Request = oAuth2Authentication.getOAuth2Request();
 
         //刷新token的参数
-        final Map<String, String> requestParameters = Map.of(
-                "grant_type", GrantType.refresh_token.name(),
-                "client_id", oAuth2Request.getRequestParameters().get("client_id"),
-                "refresh_token", refreshToken
-        );
+        final Map<String, String> requestParameters = Map.of("grant_type", GrantType.refresh_token.name(), "client_id", oAuth2Request.getRequestParameters().get("client_id"), "refresh_token", refreshToken);
 
         //设置请求token的参数
         this.authHelper.put(requestParameters);
         OAuth2AccessToken newToken = null;
         try {
-            final TokenRequest tokenRequest = new TokenRequest(
-                    requestParameters,
-                    oAuth2Request.getClientId(),
-                    oAuth2Request.getScope(),
-                    oAuth2Request.getGrantType()
-            );
+            final TokenRequest tokenRequest = new TokenRequest(requestParameters, oAuth2Request.getClientId(), oAuth2Request.getScope(), oAuth2Request.getGrantType());
             newToken = this.tokenServices.refreshAccessToken(refreshToken, tokenRequest);
         } catch (Exception e) {
             e.printStackTrace();
@@ -346,6 +337,19 @@ public class UserServiceImpl implements UserService {
         }
         this.authEventStreamHelper.publish(new UserStreamModel(AuthEventType.Enable, uid));
         return ResultContent.build(ResultState.Success);
+    }
+
+    @Override
+    public ResultContent<Void> unRegister(String uid, String passWord) {
+        User user = this.userDao.findTop1ById(uid);
+        if (user == null) {
+            return ResultContent.buildContent(ResultState.UserExists);
+        }
+        if (!passwordEncoder.matches(passWord, user.getPassWord())) {
+            return ResultContent.build(ResultState.UserPasswordError);
+        }
+        this.logoutFromUid(null, uid);
+        return ResultContent.build(this.userDao.unRegister(uid));
     }
 
     /**

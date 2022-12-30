@@ -1,6 +1,7 @@
 package com.github.microservice.components.push.service;
 
 import com.github.microservice.app.stream.StreamHelper;
+import com.github.microservice.components.push.model.GeTuiMessage;
 import com.github.microservice.components.push.model.MqMessage;
 import com.github.microservice.components.push.model.SmsMessage;
 import com.github.microservice.components.push.type.MessageType;
@@ -35,5 +36,10 @@ public class PushService {
         streamHelper.send(StreamName, Map.of("messageType", MessageType.Mq,"info",message));
     }
 
-
+    /**
+     * 发送app通知
+     */
+    public void sendApp(GeTuiMessage message){
+        streamHelper.send(StreamName, Map.of("messageType", MessageType.App, "info", message));
+    }
 }

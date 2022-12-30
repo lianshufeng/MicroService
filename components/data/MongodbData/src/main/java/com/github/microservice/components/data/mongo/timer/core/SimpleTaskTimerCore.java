@@ -18,7 +18,6 @@ import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
@@ -62,7 +61,6 @@ public class SimpleTaskTimerCore {
     private Map<String, TimerItem> scheduledFutureMap = new ConcurrentHashMap<>();
 
 
-    @PreDestroy
     private void shutdown() {
         executorService.shutdownNow();
         scheduledFutureMap.values().forEach((it) -> {
@@ -77,6 +75,9 @@ public class SimpleTaskTimerCore {
      */
     public void after() {
         executorService = Executors.newFixedThreadPool(taskTimerConf.getMaxThreadPoolCount());
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            shutdown();
+        }));
         refreshTask();
         initListen();
     }
@@ -119,7 +120,7 @@ public class SimpleTaskTimerCore {
 
         //取出任务变更的id
         String taskId = it.getDocumentKey().getObjectId("_id").getValue().toString();
-        log.info("{} -> {} -> {}", collectionName, it.getOperationType(), taskId);
+        log.debug("{} -> {} -> {}", collectionName, it.getOperationType(), taskId);
         if (it.getOperationType() == OperationType.DELETE) {
             this.deleteTask(taskId);
         } else {
@@ -153,6 +154,7 @@ public class SimpleTaskTimerCore {
      * 添加一个任务
      */
     private void addTask(final SimpleTaskTimerTable taskTimerTable) {
+        //表达式存在
         if (!StringUtils.hasText(taskTimerTable.getCron())) {
             return;
         }
@@ -164,11 +166,7 @@ public class SimpleTaskTimerCore {
                 postEvent(taskTimerTable.getId());
 
             }, cronTrigger);
-            this.scheduledFutureMap.put(taskTimerTable.getId(), new TimerItem()
-                    .setCorn(taskTimerTable.getCron())
-                    .setCreateTime(System.currentTimeMillis())
-                    .setScheduledFuture(future)
-            );
+            this.scheduledFutureMap.put(taskTimerTable.getId(), new TimerItem().setCorn(taskTimerTable.getCron()).setCreateTime(System.currentTimeMillis()).setScheduledFuture(future));
         } catch (Exception e) {
             log.error("e : {}", e);
         }
@@ -178,9 +176,19 @@ public class SimpleTaskTimerCore {
     /**
      * 通知任务调度器被触发
      */
-    private void postEvent(String taskId) {
+    private void postEvent(final String taskId) {
         executorService.execute(() -> {
-            taskTimerEvent.execute(taskTimerDao.findById(taskId));
+            if (!this.taskTimerDao.lockTime(taskId)) {
+                return;
+            }
+            try {
+                taskTimerEvent.execute(taskTimerDao.findById(taskId));
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("e : {}", e);
+            } finally {
+                this.taskTimerDao.unlockTime(taskId);
+            }
         });
     }
 
@@ -190,7 +198,16 @@ public class SimpleTaskTimerCore {
      */
     private synchronized void updateTask(SimpleTaskTimerTable taskTimerTable) {
         //任务id
-        String taskId = taskTimerTable.getId();
+        final String taskId = taskTimerTable.getId();
+
+
+        //判断是否禁用表达式
+        if (taskTimerTable.isDisable()) {
+            this.deleteTask(taskId);
+            return;
+        }
+
+
         //查询内存
         TimerItem timerItem = this.scheduledFutureMap.get(taskId);
         if (timerItem == null) {

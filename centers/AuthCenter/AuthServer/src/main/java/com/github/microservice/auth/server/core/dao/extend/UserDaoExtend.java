@@ -25,11 +25,21 @@ public interface UserDaoExtend {
 
     /**
      * 更新用户密码
+     *
      * @param uid
      * @param passWord
      * @return
      */
     boolean updatePassword(String uid, String passWord);
+
+
+    /**
+     * 注销账号
+     *
+     * @param uid
+     * @return
+     */
+    boolean unRegister(String uid);
 
 
 }

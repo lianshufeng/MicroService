@@ -1,4 +1,4 @@
-package com.github.microservice.components.data.mongo.mongo.helper;
+package com.github.microservice.components.data.base.helper;
 
 import com.github.microservice.core.util.os.SystemUtil;
 import lombok.SneakyThrows;

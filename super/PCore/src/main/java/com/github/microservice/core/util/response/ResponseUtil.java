@@ -46,7 +46,14 @@ public class ResponseUtil {
      * @return
      */
     public static String getMimeType(String extName) {
-        return extNameMimeMap.get(extName).getName();
+        if (extName == null) {
+            return null;
+        }
+        MimeType mimeType = extNameMimeMap.get(extName.toLowerCase());
+        if (mimeType == null) {
+            return null;
+        }
+        return mimeType.getName();
     }
 
     /**

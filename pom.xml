@@ -32,20 +32,11 @@
 
         <!-- 中心 -->
         <module>centers</module>
+        <module>application/FlowEngine</module>
 
 
-        <module>demo/experiment</module>
         <!-- demo -->
-<!--        <module>demo</module>-->
-
-        <!--        <module>application/EnterpriseCenter</module>-->
-        <!--        <module>application/UserCenter</module>-->
-        <!--        <module>application/MessageCenter</module>-->
-        <!--        <module>application/FileCenter</module>-->
-        <!--        <module>application/PushCenter</module>-->
-        <!--        <module>application/ProjectCenter</module>-->
-        <!--        <module>application/baidupandl</module>-->
-        <!--        <module>application/NetDisk</module>-->
+        <!--                <module>demo</module>-->
 
     </modules>
 

@@ -17,6 +17,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
+import org.springframework.cglib.beans.BeanMap;
 import org.springframework.util.StreamUtils;
 
 import javax.net.ssl.SSLContext;
@@ -198,7 +199,24 @@ public class HttpClientUtil {
         String mimeType = null;
         if (httpModel.getMethod() == MethodType.Post) {
             mimeType = "application/x-www-form-urlencoded";
-            body = httpModel.getBody() == null ? "" : String.valueOf(httpModel.getBody());
+            if (httpModel.getBody() == null) {
+                body = "";
+            } else if (httpModel.getBody() instanceof String) {
+                body = String.valueOf(httpModel.getBody());
+            } else {
+                //支持对象和map
+                StringBuffer sb = new StringBuffer();
+                Map<String, Object> bean = null;
+                if (httpModel.getBody() instanceof Map) {
+                    bean = (Map<String, Object>) httpModel.getBody();
+                } else {
+                    bean = BeanMap.create(body);
+                }
+                bean.entrySet().forEach((entry) -> {
+                    sb.append(UrlEncodeUtil.encode(entry.getKey()) + "=" + UrlEncodeUtil.encode(String.valueOf(entry.getValue())) + "&");
+                });
+                body = sb.toString();
+            }
         } else if (httpModel.getMethod() == MethodType.Json) {
             mimeType = "application/json";
             body = httpModel.getBody() == null ? "{}" : JsonUtil.toJson(httpModel.getBody());

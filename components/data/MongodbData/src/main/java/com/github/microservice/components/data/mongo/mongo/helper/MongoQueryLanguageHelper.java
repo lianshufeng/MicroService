@@ -12,13 +12,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.lang.reflect.Field;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -31,6 +30,22 @@ public class MongoQueryLanguageHelper {
     @Autowired
     private DBHelper dbHelper;
 
+
+    @SneakyThrows
+    public Criteria from(Document document) {
+        Criteria c = new Criteria();
+        Field _criteria = c.getClass().getDeclaredField("criteria");
+        _criteria.setAccessible(true);
+        LinkedHashMap<String, Object> criteria = (LinkedHashMap<String, Object>) _criteria.get(c);
+        for (Map.Entry<String, Object> set : document.entrySet()) {
+            criteria.put(set.getKey(), set.getValue());
+        }
+        Field _criteriaChain = c.getClass().getDeclaredField("criteriaChain");
+        _criteriaChain.setAccessible(true);
+        List<Criteria> criteriaChain = (List<Criteria>) _criteriaChain.get(c);
+        criteriaChain.add(c);
+        return c;
+    }
 
     /**
      * 通过 mongo的分页条件查询
@@ -96,7 +111,7 @@ public class MongoQueryLanguageHelper {
     }
 
     @SneakyThrows
-    public List<Document> queryByMql(QueryModel queryModel,Sort sort, String tableName) {
+    public List<Document> queryByMql(QueryModel queryModel, Sort sort, String tableName) {
         MongoCollection<Document> mongoCollection = this.mongoTemplate.getCollection(tableName);
 
         final String mql = !StringUtils.hasText(queryModel.getMql()) ? "{}" : queryModel.getMql();

@@ -142,6 +142,16 @@ public interface UserService {
     );
 
 
+//    unregister
+
+    @ApiOperation(value = "账户销户", notes = "账户销户", consumes = MediaType.ALL_VALUE)
+    @RequestMapping(value = "unRegister", method = {RequestMethod.POST}, consumes = MediaType.ALL_VALUE)
+    ResultContent<Void> unRegister(
+            @ApiParam(name = "uid", value = "用户id", example = ExampleConstant.UserId) @RequestParam("uid") String uid,
+            @ApiParam(name = "passWord", value = "密码", example = "123456") @RequestParam("passWord") String passWord
+    );
+
+
 }
 
 
