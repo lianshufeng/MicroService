@@ -21,6 +21,10 @@
 
         <!--JDK版本-->
         <java.version>11</java.version>
+
+
+        <spring-cloud-gateway.version>3.1.4</spring-cloud-gateway.version>
+
     </properties>
 
 
@@ -100,7 +104,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>
-            <version>${spring-cloud.version}</version>
+            <version>${spring-cloud-gateway.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>

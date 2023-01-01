@@ -1,0 +1,48 @@
+spring:
+  cloud:
+    inetutils:
+      preferred-networks:
+        - 192.168
+  redis:
+    host: 192.168.8.226
+    port: 6379
+    database: 2
+  data:
+    mongodb:
+      uri: mongodb://auth:auth@192.168.8.226:27017,192.168.8.226:27018,192.168.8.226:27019,192.168.8.226:27020/auth?replicaSet=MongoSets
+      auto-index-creation: true
+
+
+
+init:
+  user:
+    - loginType: Phone
+      loginValue: 15123241353
+      passWord: xiaofeng
+    - loginType: Phone
+      loginValue: 15123241363
+      passWord: xiaofeng
+  client:
+    - clientId: test
+      secret: 123456
+      authorizedGrantTypes: client_credentials,password,refresh_token
+  enterprise:
+    - name: test_enterprise
+      authType: Enterprise
+      remark: 测试企业
+
+
+swagger:
+  packageName: "com.github.microservice.auth.server.core.controller"
+  title: "AuthServer"
+  description: "权限中心服务端"
+  version: "1.0"
+  enable: true
+
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        web: trace
+#debug: true
+#trace: true
