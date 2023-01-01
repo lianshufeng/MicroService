@@ -34,7 +34,7 @@
         <module>AuthCenter</module>
 
         <!-- 实验室-灰度环境 -->
-        <module>Experiment</module>
+<!--        <module>Experiment</module>-->
 
 
     </modules>
