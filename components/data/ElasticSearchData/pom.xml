@@ -17,7 +17,7 @@
     <properties>
         <!-- 项目编码 -->
         <elasticsearch.version>6.8.6</elasticsearch.version>
-        <spring-data-elasticsearch.version>3.2.4.RELEASE</spring-data-elasticsearch.version>
+        <spring-data-elasticsearch.version>4.3.10</spring-data-elasticsearch.version>
     </properties>
 
 
