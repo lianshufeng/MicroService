@@ -16,7 +16,7 @@
 
     <properties>
         <activemq-client.version>5.16.3</activemq-client.version>
-        <spring-boot-starter-activemq.version>2.5.4</spring-boot-starter-activemq.version>
+        <spring-boot-starter-activemq.version>2.7.9</spring-boot-starter-activemq.version>
     </properties>
 
 
