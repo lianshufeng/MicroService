@@ -25,7 +25,7 @@ public class TokenLoginModel {
 
     //临时密钥
     @NotNull
-    @ApiModelProperty(name = "vaue", required = true, example = "xiaofeng")
+    @ApiModelProperty(name = "value", required = true, example = "xiaofeng")
     private String value;
 
     //最大校验次数

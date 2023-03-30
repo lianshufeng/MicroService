@@ -1,5 +1,6 @@
 package com.github.microservice.core.config;
 
+import com.github.microservice.core.helper.ApplicationContextHolder;
 import com.github.microservice.core.helper.JsonHelper;
 import com.github.microservice.core.helper.SpringBeanHelper;
 import com.github.microservice.core.helper.ViewHelper;
@@ -26,5 +27,12 @@ public class PCoreConfig {
     public SpringBeanHelper springBeanHelper() {
         return new SpringBeanHelper();
     }
+
+
+    @Bean
+    public ApplicationContextHolder applicationContextHolder() {
+        return new ApplicationContextHolder();
+    }
+
 
 }

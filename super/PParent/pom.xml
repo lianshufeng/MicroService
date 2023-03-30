@@ -232,7 +232,7 @@
         <repository>
             <id>nexus</id>
             <name>nexus</name>
-            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+            <url>https://maven.aliyun.com/nexus/content/groups/public</url>
             <releases>
                 <enabled>true</enabled>
             </releases>

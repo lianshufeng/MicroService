@@ -8,7 +8,7 @@ spring:
   cloud:
     inetutils:
       preferred-networks:
-        - 192.168
+        - 172.16
     #配置中心
     config:
       server:
@@ -17,6 +17,8 @@ spring:
           search-paths: centers/ApplicationCenter/Config/src/main/resources/config/**
           force-pull: true
           skip-ssl-validation: true
+          username: ykkj
+          password: ykkj@2023
 #          proxy:
 #            https:
 #              host: 127.0.0.1

@@ -34,17 +34,6 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>com.nr.FlowEngineClient</groupId>
-            <artifactId>FlowEngineClient</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.github.microservice.components</groupId>
-                    <artifactId>Swagger2</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
     </dependencies>
 

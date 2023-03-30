@@ -1,0 +1,12 @@
+build:
+  task:
+    core-project: IT/MicroService
+  git:
+    type: Gogs
+    core: MicroService
+    host: http://192.168.1.2:4000/
+    userName: ykkj
+    passWord: ykkj@2023
+    token: 8a22feba199a55a85a5fb1cb1fba896aeb54c951
+  maven:
+    home: "D:/sdk/apache-maven-3.8.7"

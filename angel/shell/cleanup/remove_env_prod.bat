@@ -12,7 +12,7 @@ cd /d %workPath%
 del /s /q  *-prod.yml
 del /s /q  *-test.yml
 del /s /q  *-pre.yml
-del /s /q  *-dev.yml
+:: del /s /q  *-dev.yml
 
 :ne
 

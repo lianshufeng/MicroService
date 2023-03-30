@@ -28,7 +28,7 @@ public class RoleModel {
     private String remark;
 
     //权限列表
-    @ApiModelProperty(name = "auth", required = false, example = "[" + ExampleConstant.AuthName + "]")
+    @ApiModelProperty(name = "auth", required = false, example = ExampleConstant.AuthName)
     private Set<String> auth;
 
     //企业id

@@ -21,6 +21,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.RequestParameterBuilder;
@@ -41,7 +43,7 @@ import java.util.stream.Collectors;
 @EnableOpenApi
 @Configuration
 @Import(SwaggerConf.class)
-public class SwaggerConfiguration implements ApplicationRunner {
+public class SwaggerConfiguration implements ApplicationRunner, WebMvcConfigurer {
 
     @Value("${server.port}")
     private int port;
@@ -83,6 +85,7 @@ public class SwaggerConfiguration implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         String localhost = "http://localhost:" + port;
         log.info("DocApi UI : " + (localhost + "/swagger-ui/index.html"));
+        log.info("knif4j : " + (localhost + "/doc.html"));
         log.info("PostMain Import : " + (localhost + "/v2/api-docs"));
         log.info("PostMain Import : " + (localhost + "/v3/api-docs"));
     }
@@ -106,5 +109,9 @@ public class SwaggerConfiguration implements ApplicationRunner {
         return webEndpointProperties.getDiscovery().isEnabled() && (StringUtils.hasText(basePath) || ManagementPortType.get(environment).equals(ManagementPortType.DIFFERENT));
     }
 
-
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("doc.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
 }
