@@ -22,30 +22,30 @@
         <java.version>11</java.version>
 
         <!--spring cloud 版本-->
-        <spring-mvc.version>5.3.21</spring-mvc.version>
+        <spring-mvc.version>5.3.26</spring-mvc.version>
 
         <!-- auth2.0-->
-        <spring-security-core.version>5.7.2</spring-security-core.version>
+        <spring-security-core.version>5.8.2</spring-security-core.version>
         <spring-security-oauth2.version>2.5.2.RELEASE</spring-security-oauth2.version>
         <!--        <spring-security-oauth2.version>2.3.8.RELEASE</spring-security-oauth2.version>-->
 
-        <spring-boot-starter-security.version>2.7.1</spring-boot-starter-security.version>
+        <spring-boot-starter-security.version>3.0.5</spring-boot-starter-security.version>
         <spring-security-oauth2-authorization-server.version>0.1.1</spring-security-oauth2-authorization-server.version>
 
 
-        <spring-cloud-dependencies.version>2021.0.5</spring-cloud-dependencies.version>
-        <spring-cloud.version>3.1.5</spring-cloud.version>
-        <spring-cloud-starter-stream.version>3.2.4</spring-cloud-starter-stream.version>
+        <spring-cloud-dependencies.version>2021.0.6</spring-cloud-dependencies.version>
+        <spring-cloud.version>3.1.6</spring-cloud.version>
+        <spring-cloud-starter-stream.version>3.2.7</spring-cloud-starter-stream.version>
         <spring-cloud-bus.version>3.1.2</spring-cloud-bus.version>
-        <spring-cloud-starter-config.version>3.1.3</spring-cloud-starter-config.version>
+        <spring-cloud-starter-config.version>3.1.6</spring-cloud-starter-config.version>
         <spring-cloud-starter-consul-discovery.version>3.1.2</spring-cloud-starter-consul-discovery.version>
 
-        <spring-boot.version>2.7.7</spring-boot.version>
-        <spring-boot-starter-data-jpa.version>2.7.1</spring-boot-starter-data-jpa.version>
+        <spring-boot.version>2.7.10</spring-boot.version>
+        <spring-boot-starter-data-jpa.version>2.7.10</spring-boot-starter-data-jpa.version>
 
-        <spring-data-jpa.version>2.7.1</spring-data-jpa.version>
+        <spring-data-jpa.version>2.7.10</spring-data-jpa.version>
 
-        <spring-integration-core.version>5.5.13</spring-integration-core.version>
+        <spring-integration-core.version>5.5.17</spring-integration-core.version>
 
         <!-- 依赖组件 -->
 <!--        <ribbon.version>2.7.18.RELEASE</ribbon.version>-->
@@ -59,22 +59,25 @@
 
 
         <!-- 其他工具版本 -->
-        <groovy.version>3.0.9</groovy.version> <!-- 3.0.10 拷贝方法注解会出现重复 -->
-        <ehcache.version>3.10.0</ehcache.version>
-        <caffeine.version>3.1.0</caffeine.version>
-        <lombok.version>1.18.24</lombok.version>
-        <httpclient.version>4.5.13</httpclient.version>
+<!--        <groovy.version>3.0.16</groovy.version> &lt;!&ndash; 3.0.10 拷贝方法注解会出现重复 &ndash;&gt;-->
+<!--        <groovy.version>4.0.10</groovy.version>-->
+
+        <groovy.version>3.0.9</groovy.version>
+        <ehcache.version>3.10.8</ehcache.version>
+        <caffeine.version>3.1.5</caffeine.version>
+        <lombok.version>1.18.26</lombok.version>
+        <httpclient.version>4.5.14</httpclient.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <junit.version>4.13.2</junit.version>
         <javax.servlet.jsp-api.version>2.3.3</javax.servlet.jsp-api.version>
         <servlets-ssi.version>5.0.16</servlets-ssi.version>
         <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
-        <commons-fileupload.version>1.4</commons-fileupload.version>
+        <commons-fileupload.version>1.5</commons-fileupload.version>
         <jstl.version>1.2</jstl.version>
-        <gson.version>2.9.0</gson.version>
-        <jackson.version>2.14.1</jackson.version>
+        <gson.version>2.10.1</gson.version>
+        <jackson.version>2.14.2</jackson.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
-        <hibernate.version>6.1.3.Final</hibernate.version>
+        <hibernate.version>6.1.7.Final</hibernate.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
 
@@ -84,11 +87,17 @@
 
 
         <!-- 插件 -->
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+
+        <groovy-eclipse-compiler.version>3.8.0</groovy-eclipse-compiler.version>
+<!--        <groovy-eclipse-batch.version>4.0.11-02</groovy-eclipse-batch.version>-->
+
+<!--        <groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>-->
         <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
-        <maven-war-plugin.version>3.3.1</maven-war-plugin.version>
-        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+
+
+        <maven-war-plugin.version>3.3.2</maven-war-plugin.version>
+        <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
 
         <!--项目版本-->
         <Project.version>1.0.0-SNAPSHOT</Project.version>

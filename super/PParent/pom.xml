@@ -186,13 +186,19 @@
         </dependency>
 
 
-        <!-- groovy -->
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>${groovy.version}</version>
+            <version>3.0.9</version>
             <type>pom</type>
         </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.groovy</groupId>-->
+        <!--            <artifactId>groovy-all</artifactId>-->
+        <!--            <version>4.0.10</version>-->
+        <!--            <type>pom</type>-->
+        <!--        </dependency>-->
 
 
         <!-- Get Set 需要IDE 安装 lombok plugin -->
@@ -266,18 +272,12 @@
 
 
     <pluginRepositories>
-        <!-- Needed for latest Groovy Eclipse version -->
+
         <pluginRepository>
-            <id>bintray</id>
-            <name>Groovy Bintray</name>
-            <url>https://dl.bintray.com/groovy/maven</url>
-            <releases>
-                <updatePolicy>never</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
+            <id>groovy-plugins-release</id>
+            <url>https://groovy.jfrog.io/artifactory/plugins-release</url>
         </pluginRepository>
+
     </pluginRepositories>
 
 
@@ -296,6 +296,35 @@
 
 
             <plugin>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+                <version>2.1.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>addSources</goal>
+                            <goal>addTestSources</goal>
+                            <goal>generateStubs</goal>
+                            <goal>compile</goal>
+                            <goal>generateTestStubs</goal>
+                            <goal>compileTests</goal>
+                            <goal>removeStubs</goal>
+                            <goal>removeTestStubs</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sources>
+                        <source>
+                            <directory>${project.basedir}/src/main/java</directory>
+                            <includes>
+                                <include>**/*.groovy</include>
+                            </includes>
+                        </source>
+                    </sources>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
@@ -303,36 +332,63 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
-                    <compilerId>groovy-eclipse-compiler</compilerId>
-                    <verbose>true</verbose>
-                    <fork>true</fork>
-                    <compilerArguments>
-                        <javaAgentClass>lombok.launch.Agent</javaAgentClass>
-                    </compilerArguments>
+
                     <useIncrementalCompilation>false</useIncrementalCompilation>
                     <showDeprecation>true</showDeprecation>
                     <showWarnings>true</showWarnings>
 
+                    <!--                    <compilerArguments>-->
+                    <!--                        <javaAgentClass>lombok.launch.Agent</javaAgentClass>-->
+                    <!--                    </compilerArguments>-->
                 </configuration>
-
-                <dependencies>
-                    <dependency>
-                        <groupId>org.codehaus.groovy</groupId>
-                        <artifactId>groovy-eclipse-compiler</artifactId>
-                        <version>${groovy-eclipse-compiler.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.codehaus.groovy</groupId>
-                        <artifactId>groovy-eclipse-batch</artifactId>
-                        <version>${groovy-eclipse-batch.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.projectlombok</groupId>
-                        <artifactId>lombok</artifactId>
-                        <version>${lombok.version}</version>
-                    </dependency>
-                </dependencies>
+                <!--                <dependencies>-->
+                <!--                    <dependency>-->
+                <!--                        <groupId>org.projectlombok</groupId>-->
+                <!--                        <artifactId>lombok</artifactId>-->
+                <!--                        <version>${lombok.version}</version>-->
+                <!--                    </dependency>-->
+                <!--                </dependencies>-->
             </plugin>
+
+
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-compiler-plugin</artifactId>-->
+            <!--                <version>${maven-compiler-plugin.version}</version>-->
+            <!--                <configuration>-->
+            <!--                    <source>${java.version}</source>-->
+            <!--                    <target>${java.version}</target>-->
+            <!--                    <encoding>${project.build.sourceEncoding}</encoding>-->
+            <!--                    <compilerId>groovy-eclipse-compiler</compilerId>-->
+            <!--                    <verbose>true</verbose>-->
+            <!--                    <fork>true</fork>-->
+            <!--                    <compilerArguments>-->
+            <!--                        <javaAgentClass>lombok.launch.Agent</javaAgentClass>-->
+            <!--                    </compilerArguments>-->
+            <!--                    <useIncrementalCompilation>false</useIncrementalCompilation>-->
+            <!--                    <showDeprecation>true</showDeprecation>-->
+            <!--                    <showWarnings>true</showWarnings>-->
+
+            <!--                </configuration>-->
+
+            <!--                <dependencies>-->
+            <!--                    <dependency>-->
+            <!--                        <groupId>org.codehaus.groovy</groupId>-->
+            <!--                        <artifactId>groovy-eclipse-compiler</artifactId>-->
+            <!--                        <version>${groovy-eclipse-compiler.version}</version>-->
+            <!--                    </dependency>-->
+            <!--                    <dependency>-->
+            <!--                        <groupId>org.codehaus.groovy</groupId>-->
+            <!--                        <artifactId>groovy-eclipse-batch</artifactId>-->
+            <!--                        <version>${groovy-eclipse-batch.version}</version>-->
+            <!--                    </dependency>-->
+            <!--                    <dependency>-->
+            <!--                        <groupId>org.projectlombok</groupId>-->
+            <!--                        <artifactId>lombok</artifactId>-->
+            <!--                        <version>${lombok.version}</version>-->
+            <!--                    </dependency>-->
+            <!--                </dependencies>-->
+            <!--            </plugin>-->
 
 
             <plugin>

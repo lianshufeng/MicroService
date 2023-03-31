@@ -2,6 +2,7 @@ package com.github.microservice.core.util.response
 
 
 import com.github.microservice.core.util.response.model.MimeType
+import groovy.xml.XmlParser
 
 class WebXmlUtil {
 
