@@ -59,7 +59,7 @@
 
 
         <!-- 其他工具版本 -->
-        <groovy.version>3.0.9</groovy.version> <!-- 3.0.10 拷贝方法注解会出现重复 -->
+        <groovy.version>3.0.17</groovy.version> <!-- 3.0.10 拷贝方法注解会出现重复 -->
         <ehcache.version>3.10.0</ehcache.version>
         <caffeine.version>3.1.0</caffeine.version>
         <lombok.version>1.18.24</lombok.version>
