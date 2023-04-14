@@ -43,7 +43,7 @@
         <spring-boot.version>2.7.10</spring-boot.version>
         <spring-boot-starter-data-jpa.version>2.7.10</spring-boot-starter-data-jpa.version>
 
-        <spring-data-jpa.version>2.7.10</spring-data-jpa.version>
+        <spring-data-jpa.version>2.7.11</spring-data-jpa.version>
 
         <spring-integration-core.version>5.5.17</spring-integration-core.version>
 
