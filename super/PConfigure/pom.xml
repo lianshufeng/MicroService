@@ -25,7 +25,7 @@
         <spring-mvc.version>5.3.26</spring-mvc.version>
 
         <!-- auth2.0-->
-        <spring-security-core.version>5.8.2</spring-security-core.version>
+        <spring-security-core.version>5.8.3</spring-security-core.version>
         <spring-security-oauth2.version>2.5.2.RELEASE</spring-security-oauth2.version>
         <!--        <spring-security-oauth2.version>2.3.8.RELEASE</spring-security-oauth2.version>-->
 
