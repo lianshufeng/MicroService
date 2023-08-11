@@ -1,9 +1,11 @@
 package com.example.auth.core.controller;
 
+import com.github.microservice.auth.client.content.ResultContent;
 import com.github.microservice.auth.client.service.UserService;
 import com.github.microservice.auth.security.annotations.ResourceAuth;
 import com.github.microservice.auth.security.annotations.ResourceAuths;
 import com.github.microservice.auth.security.helper.AuthHelper;
+import com.github.microservice.auth.security.model.AuthDetails;
 import com.github.microservice.auth.security.type.AuthType;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -33,6 +35,15 @@ public class TestController {
         return userService.refreshToken(token);
     }
 
+
+    @ApiOperation("get")
+    @GetMapping("get")
+    @ResourceAuth(value = "user",type = AuthType.User)
+    public ResultContent<Object> get() {
+        AuthDetails authDetails =  authHelper.getCurrentUser();
+        System.out.println(authDetails.getAuth());
+        return null;
+    }
 
     @PostMapping("test")
     @ResourceAuth("auth1")

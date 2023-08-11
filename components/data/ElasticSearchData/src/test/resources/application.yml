@@ -1,6 +1,6 @@
 elasticsearch:
   cluster-name: docker-cluster
-  cluster-nodes: 192.168.80.128:9300
+  cluster-nodes: 192.168.20.222:9200
 
 
 #spring:

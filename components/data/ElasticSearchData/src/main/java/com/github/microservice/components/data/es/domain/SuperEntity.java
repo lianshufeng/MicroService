@@ -5,6 +5,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -35,12 +37,14 @@ public abstract class SuperEntity  implements Serializable {
      */
 
     @CreatedDate
+    @Field(type = FieldType.Long, index = true)
     private Long createTime;
 
     /**
      * 修改时间
      */
     @LastModifiedDate
+    @Field(type = FieldType.Long, index = true)
     private Long updateTime;
 
 

@@ -48,7 +48,18 @@ spring:
 
 
 
-
+swagger:
+  packageName: "com.example.auth.core.controller"
+  title: "Auth"
+  description: "auth"
+  version: "1.0"
+  globalRequestParameters:
+    - name: "accessToken"
+      description: "用户访问令牌"
+      parameterType: "HEADER"
+    - name: "epId"
+      description: "enterprise"
+      parameterType: "HEADER"
 
 
 

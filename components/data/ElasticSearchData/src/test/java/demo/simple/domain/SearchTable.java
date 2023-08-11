@@ -13,7 +13,8 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(indexName = "searchtable", type = "post", indexStoreType = "fs", shards = 5, replicas = 1, refreshInterval = "-1")
+//@Document(indexName = "searchtable", type = "post", indexStoreType = "fs", shards = 5, replicas = 1, refreshInterval = "-1")
+@Document(indexName = "searchtable",  indexStoreType = "fs", shards = 5, replicas = 1, refreshInterval = "-1")
 public class SearchTable extends SuperEntity {
 
     @Field(analyzer = "ik_max_word", searchAnalyzer = "ik_max_word", index = true, type = FieldType.Text)

@@ -15,9 +15,10 @@
 
 
     <properties>
-        <!-- 项目编码 -->
-        <elasticsearch.version>6.8.6</elasticsearch.version>
-        <spring-data-elasticsearch.version>3.2.4.RELEASE</spring-data-elasticsearch.version>
+        <!-- 项目编码,版本必须配套使用 -->
+        <elasticsearch.version>7.17.6</elasticsearch.version>
+<!--        https://docs.spring.io/spring-data/elasticsearch/docs/4.4.9/reference/html/#reference-->
+        <spring-data-elasticsearch.version>4.4.12</spring-data-elasticsearch.version>
     </properties>
 
 
@@ -77,6 +78,8 @@
             <artifactId>elasticsearch-rest-high-level-client</artifactId>
             <version>${elasticsearch.version}</version>
         </dependency>
+
+
 
 
     </dependencies>

@@ -32,18 +32,18 @@
         <spring-boot-starter-security.version>3.0.5</spring-boot-starter-security.version>
         <spring-security-oauth2-authorization-server.version>0.1.1</spring-security-oauth2-authorization-server.version>
 
-
-        <spring-cloud-dependencies.version>2021.0.6</spring-cloud-dependencies.version>
+        <!-- jdk11 2021.0.x -->
+        <spring-cloud-dependencies.version>2021.0.7</spring-cloud-dependencies.version>
         <spring-cloud.version>3.1.6</spring-cloud.version>
         <spring-cloud-starter-stream.version>3.2.7</spring-cloud-starter-stream.version>
         <spring-cloud-bus.version>3.1.2</spring-cloud-bus.version>
         <spring-cloud-starter-config.version>3.1.6</spring-cloud-starter-config.version>
         <spring-cloud-starter-consul-discovery.version>3.1.2</spring-cloud-starter-consul-discovery.version>
 
-        <spring-boot.version>2.7.10</spring-boot.version>
-        <spring-boot-starter-data-jpa.version>2.7.10</spring-boot-starter-data-jpa.version>
+        <spring-boot.version>2.7.12</spring-boot.version>
+        <spring-boot-starter-data-jpa.version>2.7.12</spring-boot-starter-data-jpa.version>
 
-        <spring-data-jpa.version>2.7.10</spring-data-jpa.version>
+        <spring-data-jpa.version>2.7.12</spring-data-jpa.version>
 
         <spring-integration-core.version>5.5.17</spring-integration-core.version>
 
@@ -158,10 +158,10 @@
             <properties>
                 <spring.profiles.active>dev</spring.profiles.active>
 
-                <ApplicationCenter.url>192.168.1.2:8500,192.168.1.2:8501,192.168.1.2:8502</ApplicationCenter.url>
-                <ConfigCenter.url>http://192.168.1.2:${ConfigCenter.port}</ConfigCenter.url>
-                <Kafka.brokers>192.168.1.2:9092,192.168.1.2:9093,192.168.1.2:9094</Kafka.brokers>
-                <Zipkin.baseUrl>http://192.168.1.2:9411</Zipkin.baseUrl>
+                <ApplicationCenter.url>192.168.110.47:8500,192.168.110.47:8501,192.168.110.47:8502</ApplicationCenter.url>
+                <ConfigCenter.url>http://192.168.110.47:${ConfigCenter.port}</ConfigCenter.url>
+                <Kafka.brokers>192.168.110.47:9092,192.168.110.47:9093,192.168.110.47:9094</Kafka.brokers>
+                <Zipkin.baseUrl>http://192.168.110.47:9411</Zipkin.baseUrl>
                 <Zipkin.sampler.probability>0.01</Zipkin.sampler.probability>
             </properties>
         </profile>

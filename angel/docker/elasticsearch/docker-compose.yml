@@ -46,7 +46,7 @@ services:
 
 
 #中文分词库
-#wget -O elasticsearch-analysis-ik-${es_version}.zip https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v${es_version}/elasticsearch-analysis-ik-${es_version}.zip ; unzip -d $store/ik elasticsearch-analysis-ik-${es_version}.zip ; rm -rf elasticsearch-analysis-ik-${es_version}.zip
+#curl -L https://github.jpy.wang/medcl/elasticsearch-analysis-ik/releases/download/v${es_version}/elasticsearch-analysis-ik-${es_version}.zip -o elasticsearch-analysis-ik-${es_version}.zip ; unzip -d $store/ik elasticsearch-analysis-ik-${es_version}.zip ; rm -rf elasticsearch-analysis-ik-${es_version}.zip
 
 
 

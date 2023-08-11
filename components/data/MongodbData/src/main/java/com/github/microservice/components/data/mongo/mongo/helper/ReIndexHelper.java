@@ -4,6 +4,7 @@ import com.github.microservice.components.data.mongo.mongo.domain.SuperEntity;
 import com.github.microservice.core.util.bean.BeanUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -81,6 +82,28 @@ public class ReIndexHelper {
     }
 
 
+    public void copyIndex(String tableName, String newTableName) {
+        final IndexOperations indexOperations = this.mongoTemplate.indexOps(tableName);
+        indexOperations.getIndexInfo().stream().filter(it -> !Set.of("_id_", "_id").contains(it.getName())).forEach((indexInfo) -> {
+            final String indexName = indexInfo.getName();
+            final IndexOperations newIndexOperations = this.mongoTemplate.indexOps(newTableName);
+
+            //删除索引
+            newIndexOperations.getIndexInfo().stream().filter(it -> indexName.equals(it.getName())).forEach((it) -> {
+                newIndexOperations.dropIndex(it.getName());
+            });
+            final Index newIndex = new Index();
+            newIndex.named(indexName);
+            indexInfo.getIndexFields().forEach((it) -> {
+                newIndex.on(it.getKey(), it.getDirection());
+            });
+
+            //创建索引
+            newIndexOperations.ensureIndex(newIndex);
+        });
+    }
+
+
     /**
      * 取出现有点索引
      *
@@ -98,30 +121,37 @@ public class ReIndexHelper {
      * @param tableName
      * @param indexs
      */
+    @SneakyThrows
     public void updateIndex(String tableName, Index... indexs) {
         //现有索引
-        Set<String> nowIndexNames = getIndexNames(tableName);
-
+        final Set<String> nowIndexNames = getIndexNames(tableName);
 
         //索引
-        IndexOperations indexOperations = this.mongoTemplate.indexOps(tableName);
+        final IndexOperations indexOperations = this.mongoTemplate.indexOps(tableName);
 
         //索引不存在建索引
-        Arrays.stream(indexs).filter((it) -> {
-            try {
-                Field field = it.getClass().getDeclaredField("name");
-                field.setAccessible(true);
-                Object val = field.get(it);
-                return (val instanceof String) && !(nowIndexNames.contains(String.valueOf(val)));
-            } catch (Exception e) {
-                e.printStackTrace();
+        Arrays.stream(indexs).filter(it -> it.getIndexKeys().size() > 0).forEach((it) -> {
+            String indexName = getIndexName(it);
+            if ((nowIndexNames.contains(indexName))) {
+                indexOperations.dropIndex(indexName);
             }
-            return false;
-        }).forEach((it) -> {
             String ret = indexOperations.ensureIndex(it);
-            log.info("create index : " + ret);
+            log.info("update index : " + ret);
         });
+    }
 
+
+    @SneakyThrows
+    private String getIndexName(Index index) {
+        final Field field = FieldUtils.getDeclaredField(Index.class, "name", true);
+        if (field == null) {
+            return null;
+        }
+        Object val = field.get(index);
+        if (val == null) {
+            return null;
+        }
+        return String.valueOf(val);
     }
 
     /**
