@@ -34,10 +34,10 @@
 
         <!-- jdk11 2021.0.x -->
         <spring-cloud-dependencies.version>2021.0.7</spring-cloud-dependencies.version>
-        <spring-cloud.version>3.1.6</spring-cloud.version>
+        <spring-cloud.version>4.0.4</spring-cloud.version>
         <spring-cloud-starter-stream.version>3.2.7</spring-cloud-starter-stream.version>
         <spring-cloud-bus.version>3.1.2</spring-cloud-bus.version>
-        <spring-cloud-starter-config.version>3.1.6</spring-cloud-starter-config.version>
+        <spring-cloud-starter-config.version>4.0.0</spring-cloud-starter-config.version>
         <spring-cloud-starter-consul-discovery.version>3.1.2</spring-cloud-starter-consul-discovery.version>
 
         <spring-boot.version>2.7.12</spring-boot.version>
