@@ -6,9 +6,6 @@ import com.github.microservice.auth.security.model.EnterpriseUserCacheItem;
 import com.github.microservice.auth.security.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -143,7 +140,7 @@ public class AuthClientUserTokenCache {
      */
 //    @CachePut(value = CacheName, key = "#uToken")
     public EnterpriseUserCacheItem put(String uToken, EnterpriseUserCacheItem t) {
-        log.info("Put Cache : {}", t.getAccessToken());
+        log.debug("Put Cache : {}", t.getAccessToken());
         this.cache.put(uToken, t);
         return t;
     }
@@ -157,7 +154,7 @@ public class AuthClientUserTokenCache {
         if (item instanceof EnterpriseUserCacheItem) {
             return (EnterpriseUserCacheItem) item;
         }
-        log.info("Miss Cache : {}", uToken);
+        log.debug("Miss Cache : {}", uToken);
         return null;
     }
 
@@ -166,7 +163,7 @@ public class AuthClientUserTokenCache {
      */
 //    @CacheEvict(value = CacheName, key = "#uToken")
     public void remove(String uToken) {
-        log.info("remove Cache : " + uToken);
+        log.debug("remove Cache : " + uToken);
         this.cache.asMap().remove(uToken);
     }
 

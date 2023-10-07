@@ -4,12 +4,12 @@ spring:
       preferred-networks:
         - 192.168
   redis:
-    host: 192.168.1.2
-    port: 6479
+    host: 192.168.20.222
+    port: 6379
     database: 2
   data:
     mongodb:
-      uri: mongodb://auth:auth@192.168.1.2:37017,192.168.1.2:37018,192.168.1.2:37019/auth?replicaSet=MongoSetsShard1
+      uri: mongodb://auth:auth@192.168.20.222:27017,192.168.20.222:27018,192.168.20.222:27019/auth?replicaSet=MongoSetsShard1
       auto-index-creation: true
 
 

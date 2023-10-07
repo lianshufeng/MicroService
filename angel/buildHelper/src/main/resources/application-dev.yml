@@ -4,9 +4,9 @@ build:
   git:
     type: Gogs
     core: MicroService
-    host: http://192.168.1.2:4000/
-    userName: ykkj
-    passWord: ykkj@2023
-    token: 8a22feba199a55a85a5fb1cb1fba896aeb54c951
+    host: http://192.168.20.222:3000/
+    userName: stdc
+    passWord: CPMBf0Dq95SPxcKU
+    token: c07c442a10d159c37f4dee26d14fdd6e08e6fccc
   maven:
     home: "D:/sdk/apache-maven-3.8.7"

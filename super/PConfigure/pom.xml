@@ -22,52 +22,52 @@
         <java.version>11</java.version>
 
         <!--spring cloud 版本-->
-        <spring-mvc.version>5.3.26</spring-mvc.version>
+        <spring-mvc.version>5.3.30</spring-mvc.version>
 
         <!-- auth2.0-->
-        <spring-security-core.version>5.8.2</spring-security-core.version>
+        <spring-security-core.version>5.8.7</spring-security-core.version>
         <spring-security-oauth2.version>2.5.2.RELEASE</spring-security-oauth2.version>
         <!--        <spring-security-oauth2.version>2.3.8.RELEASE</spring-security-oauth2.version>-->
 
-        <spring-boot-starter-security.version>3.0.5</spring-boot-starter-security.version>
+        <spring-boot-starter-security.version>3.0.11</spring-boot-starter-security.version>
         <spring-security-oauth2-authorization-server.version>0.1.1</spring-security-oauth2-authorization-server.version>
 
         <!-- jdk11 2021.0.x -->
-        <spring-cloud-dependencies.version>2021.0.7</spring-cloud-dependencies.version>
-        <spring-cloud.version>3.1.6</spring-cloud.version>
-        <spring-cloud-starter-stream.version>3.2.7</spring-cloud-starter-stream.version>
+        <spring-cloud-dependencies.version>2021.0.8</spring-cloud-dependencies.version>
+        <spring-cloud.version>3.1.7</spring-cloud.version>
+        <spring-cloud-starter-stream.version>3.2.9</spring-cloud-starter-stream.version>
         <spring-cloud-bus.version>3.1.2</spring-cloud-bus.version>
-        <spring-cloud-starter-config.version>3.1.6</spring-cloud-starter-config.version>
-        <spring-cloud-starter-consul-discovery.version>3.1.2</spring-cloud-starter-consul-discovery.version>
+        <spring-cloud-starter-config.version>3.1.8</spring-cloud-starter-config.version>
+        <spring-cloud-starter-consul-discovery.version>3.1.4</spring-cloud-starter-consul-discovery.version>
 
-        <spring-boot.version>2.7.12</spring-boot.version>
-        <spring-boot-starter-data-jpa.version>2.7.12</spring-boot-starter-data-jpa.version>
+        <spring-boot.version>2.7.16</spring-boot.version>
+        <spring-boot-starter-data-jpa.version>2.7.16</spring-boot-starter-data-jpa.version>
 
-        <spring-data-jpa.version>2.7.12</spring-data-jpa.version>
+        <spring-data-jpa.version>2.7.16</spring-data-jpa.version>
 
-        <spring-integration-core.version>5.5.17</spring-integration-core.version>
+        <spring-integration-core.version>5.5.19</spring-integration-core.version>
 
         <!-- 依赖组件 -->
 <!--        <ribbon.version>2.7.18.RELEASE</ribbon.version>-->
 <!--        <netflix.version>3.0.3</netflix.version>-->
-        <netflix-zuul.version>2.2.10.RELEASE</netflix-zuul.version>
         <netflix-hystrix.version>2.2.10.RELEASE</netflix-hystrix.version>
         <netflix-ribbon.version>2.2.10.RELEASE</netflix-ribbon.version>
 
 
-        <feign.version>11.9</feign.version>
+        <feign.version>12.5</feign.version>
 
 
         <!-- 其他工具版本 -->
 <!--        <groovy.version>3.0.16</groovy.version> &lt;!&ndash; 3.0.10 拷贝方法注解会出现重复 &ndash;&gt;-->
 <!--        <groovy.version>4.0.10</groovy.version>-->
 
+<!--        <groovy.version>4.0.15</groovy.version>-->
         <groovy.version>3.0.9</groovy.version>
         <ehcache.version>3.10.8</ehcache.version>
-        <caffeine.version>3.1.5</caffeine.version>
-        <lombok.version>1.18.26</lombok.version>
+        <caffeine.version>3.1.8</caffeine.version>
+        <lombok.version>1.18.30</lombok.version>
         <httpclient.version>4.5.14</httpclient.version>
-        <commons-lang3.version>3.12.0</commons-lang3.version>
+        <commons-lang3.version>3.13.0</commons-lang3.version>
         <junit.version>4.13.2</junit.version>
         <javax.servlet.jsp-api.version>2.3.3</javax.servlet.jsp-api.version>
         <servlets-ssi.version>5.0.16</servlets-ssi.version>
@@ -75,9 +75,9 @@
         <commons-fileupload.version>1.5</commons-fileupload.version>
         <jstl.version>1.2</jstl.version>
         <gson.version>2.10.1</gson.version>
-        <jackson.version>2.14.2</jackson.version>
+        <jackson.version>2.15.2</jackson.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
-        <hibernate.version>6.1.7.Final</hibernate.version>
+        <hibernate.version>6.2.9.Final</hibernate.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
 
@@ -89,15 +89,12 @@
         <!-- 插件 -->
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
 
-        <groovy-eclipse-compiler.version>3.8.0</groovy-eclipse-compiler.version>
-<!--        <groovy-eclipse-batch.version>4.0.11-02</groovy-eclipse-batch.version>-->
-
-<!--        <groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>-->
-        <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
+<!--        <groovy-eclipse-compiler.version>3.8.0</groovy-eclipse-compiler.version>-->
+<!--        <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>-->
 
 
         <maven-war-plugin.version>3.3.2</maven-war-plugin.version>
-        <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
 
         <!--项目版本-->
         <Project.version>1.0.0-SNAPSHOT</Project.version>
@@ -158,10 +155,10 @@
             <properties>
                 <spring.profiles.active>dev</spring.profiles.active>
 
-                <ApplicationCenter.url>192.168.110.47:8500,192.168.110.47:8501,192.168.110.47:8502</ApplicationCenter.url>
-                <ConfigCenter.url>http://192.168.110.47:${ConfigCenter.port}</ConfigCenter.url>
-                <Kafka.brokers>192.168.110.47:9092,192.168.110.47:9093,192.168.110.47:9094</Kafka.brokers>
-                <Zipkin.baseUrl>http://192.168.110.47:9411</Zipkin.baseUrl>
+                <ApplicationCenter.url>192.168.20.222:8500,192.168.20.222:8501,192.168.20.222:8502</ApplicationCenter.url>
+                <ConfigCenter.url>http://192.168.20.222:${ConfigCenter.port}</ConfigCenter.url>
+                <Kafka.brokers>192.168.20.222:9092,192.168.20.222:9093,192.168.20.222:9094</Kafka.brokers>
+                <Zipkin.baseUrl>http://192.168.20.222:9411</Zipkin.baseUrl>
                 <Zipkin.sampler.probability>0.01</Zipkin.sampler.probability>
             </properties>
         </profile>
