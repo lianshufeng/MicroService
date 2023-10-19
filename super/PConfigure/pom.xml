@@ -29,7 +29,7 @@
         <spring-security-oauth2.version>2.5.2.RELEASE</spring-security-oauth2.version>
         <!--        <spring-security-oauth2.version>2.3.8.RELEASE</spring-security-oauth2.version>-->
 
-        <spring-boot-starter-security.version>3.0.11</spring-boot-starter-security.version>
+        <spring-boot-starter-security.version>3.1.5</spring-boot-starter-security.version>
         <spring-security-oauth2-authorization-server.version>0.1.1</spring-security-oauth2-authorization-server.version>
 
         <!-- jdk11 2021.0.x -->
@@ -40,7 +40,7 @@
         <spring-cloud-starter-config.version>3.1.8</spring-cloud-starter-config.version>
         <spring-cloud-starter-consul-discovery.version>3.1.4</spring-cloud-starter-consul-discovery.version>
 
-        <spring-boot.version>2.7.16</spring-boot.version>
+        <spring-boot.version>2.7.17</spring-boot.version>
         <spring-boot-starter-data-jpa.version>2.7.16</spring-boot-starter-data-jpa.version>
 
         <spring-data-jpa.version>2.7.16</spring-data-jpa.version>
