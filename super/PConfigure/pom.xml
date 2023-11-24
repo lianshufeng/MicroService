@@ -37,7 +37,7 @@
         <spring-cloud.version>3.1.7</spring-cloud.version>
         <spring-cloud-starter-stream.version>3.2.9</spring-cloud-starter-stream.version>
         <spring-cloud-bus.version>3.1.2</spring-cloud-bus.version>
-        <spring-cloud-starter-config.version>3.1.8</spring-cloud-starter-config.version>
+        <spring-cloud-starter-config.version>4.0.4</spring-cloud-starter-config.version>
         <spring-cloud-starter-consul-discovery.version>3.1.4</spring-cloud-starter-consul-discovery.version>
 
         <spring-boot.version>2.7.16</spring-boot.version>
