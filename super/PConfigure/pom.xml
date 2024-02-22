@@ -22,10 +22,10 @@
         <java.version>11</java.version>
 
         <!--spring cloud 版本-->
-        <spring-mvc.version>5.3.30</spring-mvc.version>
+        <spring-mvc.version>5.3.32</spring-mvc.version>
 
         <!-- auth2.0-->
-        <spring-security-core.version>5.8.7</spring-security-core.version>
+        <spring-security-core.version>5.8.10</spring-security-core.version>
         <spring-security-oauth2.version>2.5.2.RELEASE</spring-security-oauth2.version>
         <!--        <spring-security-oauth2.version>2.3.8.RELEASE</spring-security-oauth2.version>-->
 
@@ -40,7 +40,7 @@
         <spring-cloud-starter-config.version>3.1.8</spring-cloud-starter-config.version>
         <spring-cloud-starter-consul-discovery.version>3.1.4</spring-cloud-starter-consul-discovery.version>
 
-        <spring-boot.version>2.7.16</spring-boot.version>
+        <spring-boot.version>3.1.9</spring-boot.version>
         <spring-boot-starter-data-jpa.version>2.7.16</spring-boot-starter-data-jpa.version>
 
         <spring-data-jpa.version>2.7.16</spring-data-jpa.version>
