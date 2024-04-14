@@ -22,7 +22,7 @@
         <java.version>11</java.version>
 
         <!--spring cloud 版本-->
-        <spring-mvc.version>5.3.30</spring-mvc.version>
+        <spring-mvc.version>5.3.34</spring-mvc.version>
 
         <!-- auth2.0-->
         <spring-security-core.version>5.8.7</spring-security-core.version>
