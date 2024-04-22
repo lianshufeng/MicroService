@@ -3,10 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>PParent</artifactId>
+        <artifactId>MSModule</artifactId>
         <groupId>com.github.microservice</groupId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../../super/PParent</relativePath>
+        <relativePath>../../super/MSModule</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>com.github.microservice</groupId>
             <artifactId>PCore</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${Project.version}</version>
         </dependency>
 
 
@@ -118,7 +118,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
-            <version>${spring-cloud.version}</version>
+            <version>4.1.0</version>
             <exclusions>
                  <exclusion>
                     <artifactId>spring-boot-autoconfigure</artifactId>

@@ -1,7 +1,7 @@
 package com.github.microservice.auth.server.core.dao;
 
 import com.github.microservice.auth.server.core.dao.extend.RoleGroupUserDaoExtend;
-import com.github.microservice.auth.server.core.domain.Enterprise;
+import com.github.microservice.auth.server.core.domain.Organization;
 import com.github.microservice.auth.server.core.domain.RoleGroup;
 import com.github.microservice.auth.server.core.domain.RoleGroupUser;
 import com.github.microservice.auth.server.core.domain.User;
@@ -18,11 +18,16 @@ public interface RoleGroupUserDao extends MongoDao<RoleGroupUser>, RoleGroupUser
     /**
      * 查询企业中的用户所在的角色组
      *
-     * @param enterprise
+     * @param organization
      * @param user
      * @return
      */
-    List<RoleGroupUser> findByEnterpriseAndUserIn(Enterprise enterprise, User... user);
+    List<RoleGroupUser> findByOrganizationAndUserIn(Organization organization, User... user);
+
+
+
+    List<RoleGroupUser> findByRoleGroupAndUserIn(RoleGroup roleGroup, User... user);
+
 
 
     /**

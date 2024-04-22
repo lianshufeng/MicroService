@@ -2,6 +2,7 @@ package com.github.microservice.core.boot;
 
 import com.github.microservice.core.config.PCoreConfig;
 import com.github.microservice.core.runner.BannerApplicationRunner;
+import com.github.microservice.core.runner.DebugMappingRunner;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -57,6 +58,11 @@ public abstract class ApplicationBootSuper extends SpringBootServletInitializer 
     @Bean
     public ApplicationRunner BannerApplicationRunner() {
         return new BannerApplicationRunner();
+    }
+
+    @Bean
+    public ApplicationRunner debugMappingBootSuper() {
+        return new DebugMappingRunner();
     }
 
 

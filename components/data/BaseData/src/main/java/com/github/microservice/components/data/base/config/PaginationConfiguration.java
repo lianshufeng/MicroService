@@ -1,7 +1,6 @@
 package com.github.microservice.components.data.base.config;
 
 import org.springframework.beans.factory.ObjectFactory;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -10,6 +10,7 @@ import com.github.microservice.auth.server.core.domain.AuthResourcesName;
 import com.github.microservice.components.data.base.util.PageEntityUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @Service
+@Primary
 public class AuthResourcesNameServiceImpl implements AuthResourcesNameService {
 
     @Autowired

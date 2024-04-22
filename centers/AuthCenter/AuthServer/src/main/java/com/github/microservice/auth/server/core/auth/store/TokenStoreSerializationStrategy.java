@@ -2,6 +2,10 @@ package com.github.microservice.auth.server.core.auth.store;
 
 import com.github.microservice.auth.server.core.auth.store.serialization.OAuth2AuthenticationSerializationStrategy;
 import com.github.microservice.auth.server.core.auth.store.serialization.OAuth2RefreshTokenSerializationStrategy;
+import com.github.microservice.auth.server.core.oauth2.authentication.OAuth2Authentication;
+import com.github.microservice.auth.server.core.oauth2.strategy.JdkSerializationStrategy;
+import com.github.microservice.auth.server.core.oauth2.strategy.RedisTokenStoreSerializationStrategy;
+import com.github.microservice.auth.server.core.oauth2.token.OAuth2RefreshToken;
 import com.github.microservice.core.helper.SpringBeanHelper;
 import com.github.microservice.core.util.JsonUtil;
 import com.google.common.base.Preconditions;
@@ -9,10 +13,6 @@ import groovy.transform.Undefined;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.security.oauth2.common.OAuth2RefreshToken;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.token.store.redis.JdkSerializationStrategy;
-import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStoreSerializationStrategy;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;

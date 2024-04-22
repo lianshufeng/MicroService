@@ -25,7 +25,7 @@ public class UserTokenCacheItem {
     //用户所在的附属企业
     @Getter
     @Setter
-    private Set<String> affiliatesEnterprise;
+    private Set<String> affiliatesOrganization;
 
 
 }

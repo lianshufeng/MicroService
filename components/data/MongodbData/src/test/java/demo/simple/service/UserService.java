@@ -43,7 +43,7 @@ public class UserService {
         user.setBirthdayTime(new Date(1989, 7, 25).getTime());
         user.setUserName(userName);
         user.setR(new Random().nextInt(10));
-        this.userDao.save(user);
+        this.userDao.insert(user);
         return user.getId();
     }
 

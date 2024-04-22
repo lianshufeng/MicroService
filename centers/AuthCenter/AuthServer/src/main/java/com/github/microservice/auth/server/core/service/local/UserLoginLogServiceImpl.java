@@ -9,11 +9,13 @@ import com.github.microservice.auth.server.core.domain.UserLoginLog;
 import com.github.microservice.components.data.base.util.PageEntityUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@Primary
 public class UserLoginLogServiceImpl implements UserLoginLogService {
 
     @Autowired

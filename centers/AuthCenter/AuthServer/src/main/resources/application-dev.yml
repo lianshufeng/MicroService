@@ -3,41 +3,59 @@ spring:
     inetutils:
       preferred-networks:
         - 192.168
-  redis:
-    host: 192.168.20.222
-    port: 6379
-    database: 2
   data:
     mongodb:
-      uri: mongodb://auth:auth@192.168.20.222:27017,192.168.20.222:27018,192.168.20.222:27019/auth?replicaSet=MongoSetsShard1
+      uri: mongodb://auth:auth@192.168.31.132:27017,192.168.31.132:27018/auth
       auto-index-creation: true
+    redis:
+      host: 192.168.31.132
+      port: 6379
+      database: 2
+      password: redis_passwd_2024
 
 
 
 init:
-  user:
-    - loginType: Phone
-      loginValue: 15123241353
-      passWord: xiaofeng
-    - loginType: Phone
-      loginValue: 15123241363
-      passWord: xiaofeng
   client:
     - clientId: test
       secret: 123456
       authorizedGrantTypes: client_credentials,password,refresh_token
-  enterprise:
-    - name: test_enterprise
-      authType: Enterprise
-      remark: 测试企业
+  organizations:
+    - name: test_platform
+      authType: Platform
+      remark: 默认创建平台
+      roleGroup:
+        - name: roleGroupName
+          identity: identityName
+          remark: 角色组
+          role:
+            - name: roleName
+              remark: 角色
+              auth:
+                - auth1
+                - auth2
+                - test1
+                - test2
+          user:
+            - loginType: Phone
+              loginValue: 15123241353
+              passWord: xiaofeng
+            - loginType: Phone
+              loginValue: 15123241363
+              passWord: xiaoxue
 
 
-swagger:
-  packageName: "com.github.microservice.auth.server.core.controller"
-  title: "AuthServer"
-  description: "权限中心服务端"
-  version: "1.0"
-  enable: true
+
+
+
+springdoc:
+  api-docs:
+    # 是否开启接口文档
+    enabled: true
+  swagger-ui:
+    # 持久化认证数据，如果设置为 true，它会保留授权数据并且不会在浏览器关闭/刷新时丢失
+    persistAuthorization: true
+
 
 #logging:
 #  level:
@@ -46,3 +64,13 @@ swagger:
 #        web: trace
 #debug: true
 #trace: true
+
+logging:
+  level:
+    com:
+      github:
+        microservice:
+          core:
+            runner: debug
+
+#    org.springframework.security: trace

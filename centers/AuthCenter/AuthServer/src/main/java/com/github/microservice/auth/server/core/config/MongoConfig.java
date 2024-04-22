@@ -7,6 +7,10 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @Configuration
 @Import(MongoConfiguration.class)
-@EnableMongoRepositories("com.github.microservice.auth.server.core.dao")
+@EnableMongoRepositories(
+        value = "com.github.microservice.auth.server.core.dao"
+)
 public class MongoConfig {
+
+
 }

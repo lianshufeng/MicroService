@@ -3,7 +3,6 @@ package com.github.microservice.auth.server.core.auth.endpoint;
 import com.github.microservice.auth.client.type.DeviceType;
 import com.github.microservice.auth.client.type.GrantType;
 import com.github.microservice.auth.client.type.LoginType;
-import io.swagger.models.auth.In;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

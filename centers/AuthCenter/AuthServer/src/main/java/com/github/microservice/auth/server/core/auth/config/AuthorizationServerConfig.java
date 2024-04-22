@@ -1,47 +1,47 @@
 package com.github.microservice.auth.server.core.auth.config;
 
-import com.github.microservice.auth.server.core.auth.endpoint.AuthTokenEndpoint;
 import com.github.microservice.auth.server.core.auth.store.TokenStoreSerializationStrategy;
+import com.github.microservice.auth.server.core.oauth2.authentication.OAuth2AuthenticationManager;
+import com.github.microservice.auth.server.core.oauth2.service.ClientDetailsService;
+import com.github.microservice.auth.server.core.oauth2.service.DefaultTokenServices;
+import com.github.microservice.auth.server.core.oauth2.store.RedisTokenStore;
+import com.github.microservice.auth.server.core.oauth2.store.TokenStore;
+import com.github.microservice.auth.server.core.oauth2.strategy.RedisTokenStoreSerializationStrategy;
+import com.github.microservice.auth.server.core.service.auth.ClientDetailsServiceImpl;
+import com.github.microservice.auth.server.core.service.auth.UserDetailsServiceImpl;
 import com.github.microservice.core.helper.SpringBeanHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
-import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
-import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
-import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
-import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStoreSerializationStrategy;
+import org.springframework.security.web.SecurityFilterChain;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 
 @Configuration
-@EnableAuthorizationServer
-@SuppressWarnings("deprecation")
-public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+@EnableWebSecurity
+public class AuthorizationServerConfig {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
     @Autowired
     private SpringBeanHelper springBeanHelper;
 
-    @Autowired
-    private ClientDetailsService clientDetailsService;
-
-    @Autowired
-    private UserDetailsService userDetailsService;
 
     @Autowired
     private RedisConnectionFactory redisConnectionFactory;
+
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new UserDetailsServiceImpl();
+    }
 
 
     @Bean
@@ -58,64 +58,41 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     }
 
     @Bean
+    public ClientDetailsService clientDetailsService() {
+        return new ClientDetailsServiceImpl();
+    }
+
+
+    @Bean
     public PasswordEncoder passwordEncoder() {
-//        return NoOpPasswordEncoder.getInstance();// new BCryptPasswordEncoder();
         return new BCryptPasswordEncoder();
     }
 
 
-    public TokenEndpoint tokenEndpoint(AuthorizationServerEndpointsConfigurer endpoints) {
-        AuthTokenEndpoint tokenEndpoint = new AuthTokenEndpoint();
-        tokenEndpoint.setClientDetailsService(endpoints.getClientDetailsService());
-        tokenEndpoint.setProviderExceptionHandler(endpoints.getExceptionTranslator());
-        tokenEndpoint.setTokenGranter(endpoints.getTokenGranter());
-        tokenEndpoint.setOAuth2RequestFactory(endpoints.getOAuth2RequestFactory());
-        tokenEndpoint.setOAuth2RequestValidator(endpoints.getOAuth2RequestValidator());
-        tokenEndpoint.setAllowedRequestMethods(endpoints.getAllowedTokenEndpointRequestMethods());
-        return tokenEndpoint;
+    @Bean
+    public DefaultTokenServices defaultTokenServices() {
+        DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+        defaultTokenServices.setTokenStore(redisTokenStore());
+        defaultTokenServices.setSupportRefreshToken(true);
+        return defaultTokenServices;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager() {
+        OAuth2AuthenticationManager oAuth2AuthenticationManager = new OAuth2AuthenticationManager();
+        oAuth2AuthenticationManager.setTokenServices(defaultTokenServices());
+
+        return oAuth2AuthenticationManager;
     }
 
 
-    @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-
-        // 集成websecurity认证
-        endpoints.authenticationManager(authenticationManager);
-
-        // 注册redis令牌仓库
-        endpoints.tokenStore(redisTokenStore());
-
-        //用户身份校验
-        endpoints.userDetailsService(userDetailsService);
-
-
-        //自定义令牌端
-        TokenEndpoint tokenEndpoint = tokenEndpoint(endpoints);
-        springBeanHelper.injection(tokenEndpoint);
-        springBeanHelper.registerSingleton("tokenEndpoint", tokenEndpoint);
-
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
+                .csrf(it -> it.disable())
+                .logout(it -> it.disable())
+                .formLogin(it -> it.disable())
+                .httpBasic(withDefaults());
+        return http.build();
     }
-
-
-    @Override
-    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        // 允许通过form提交客户端认证信息(client_id,client_secret),默认为basic方式认证
-//        security.allowFormAuthenticationForClients();
-        // "/oauth/check_token"端点默认不允许访问
-//        security.checkTokenAccess("isAuthenticated()");
-        // "/oauth/token_key"断点默认不允许访问
-//        security.tokenKeyAccess("isAuthenticated()");
-        //允许表单认证
-        security.allowFormAuthenticationForClients();
-        security.checkTokenAccess("permitAll()");
-        // 配置密码编码器
-        security.passwordEncoder(passwordEncoder());
-    }
-
-    @Override
-    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.withClientDetails(clientDetailsService);
-    }
-
-
 }

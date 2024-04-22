@@ -24,21 +24,25 @@ public enum ResultState {
     AccessTokenError("访问令牌错误"),
     RefreshTokenError("刷新令牌错误"),
 
-//    EnterpriseExists("企业存在"),
 
     RoleExists("角色存在"),
     RoleNotExists("角色不存在"),
     RoleNameNotNull("角色名不能为空"),
-    RoleEnterpriseDoNotUpdate("不允许修改角色的企业"),
+    RoleOrganizationDoNotUpdate("不允许修改角色的机构"),
 
 
     RoleGroupExists("角色组存在"),
     RoleGroupNotExists("角色组不存在"),
     RoleGroupNameNotNull("角色组名不能为空"),
-    RoleGroupEnterpriseDoNotUpdate("不允许修改角色的企业"),
+    RoleGroupOrganizationDoNotUpdate("不允许修改角色的机构"),
 
-    EnterpriseNotExist("企业不存在"),
-    EnterpriseNotNull("企业不能为空"),
+    OrganizationNotExist("机构不存在"),
+    OrganizationNameExist("机构名已存在"),
+    OrganizationAuthTypeDoNotUpdate("不能创建/更新该机构类型"),
+    OrganizationNotNull("机构不能为空"),
+
+    AuthTypeExist("权限类型存在"),
+
 
     TokenLoginParmError("令牌登陆的参数类型错误 "),
 

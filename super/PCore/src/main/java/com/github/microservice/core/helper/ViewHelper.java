@@ -1,6 +1,7 @@
 package com.github.microservice.core.helper;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.experimental.Delegate;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.Optional;
 

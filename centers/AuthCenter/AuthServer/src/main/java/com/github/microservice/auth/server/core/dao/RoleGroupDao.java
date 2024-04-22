@@ -1,7 +1,7 @@
 package com.github.microservice.auth.server.core.dao;
 
 import com.github.microservice.auth.server.core.dao.extend.RoleGroupDaoExtend;
-import com.github.microservice.auth.server.core.domain.Enterprise;
+import com.github.microservice.auth.server.core.domain.Organization;
 import com.github.microservice.auth.server.core.domain.Role;
 import com.github.microservice.auth.server.core.domain.RoleGroup;
 import com.github.microservice.components.data.mongo.mongo.dao.MongoDao;
@@ -21,6 +21,12 @@ public interface RoleGroupDao extends MongoDao<RoleGroup>, RoleGroupDaoExtend {
 
 
     /**
+     * 查询指定角色在角色组的角色组
+     */
+    List<RoleGroup> findByIdIsAndRolesIn(String id, Role[] roles);
+
+
+    /**
      * 批量查询角色组
      *
      * @param ids
@@ -32,10 +38,10 @@ public interface RoleGroupDao extends MongoDao<RoleGroup>, RoleGroupDaoExtend {
     /**
      * 查询企业里的所有角色组
      *
-     * @param enterprise
+     * @param organization
      * @return
      */
-    List<RoleGroup> findByEnterprise(Enterprise enterprise);
+    List<RoleGroup> findByOrganization(Organization organization);
 
 
     /**
@@ -44,20 +50,20 @@ public interface RoleGroupDao extends MongoDao<RoleGroup>, RoleGroupDaoExtend {
      * @param identity
      * @return
      */
-    List<RoleGroup> findByEnterpriseAndIdentityIn(Enterprise enterprise, Set<String> identity);
+    List<RoleGroup> findByOrganizationAndIdentityIn(Organization Organization, Set<String> identity);
 
 
     /**
      * 企业和权限组名是否存在
      *
-     * @param enterprise
+     * @param Organization
      * @param name
      * @return
      */
-    boolean existsByEnterpriseAndName(Enterprise enterprise, String name);
+    boolean existsByOrganizationAndName(Organization Organization, String name);
 
 
-    RoleGroup findTop1ByEnterpriseAndName(Enterprise enterprise, String name);
+    RoleGroup findTop1ByOrganizationAndName(Organization Organization, String name);
 
     /**
      * 通过id查询角色组

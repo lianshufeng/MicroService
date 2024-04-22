@@ -8,13 +8,17 @@ import com.github.microservice.auth.server.core.domain.UserLog;
 import com.github.microservice.components.data.mongo.mongo.helper.DBHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.function.Consumer;
 
 /**
  * 用户日志的消费者
  */
+
 @Component
 public class UserLogStreamConsumer extends StreamConsumer<UserLogModel> {
 
@@ -33,6 +37,10 @@ public class UserLogStreamConsumer extends StreamConsumer<UserLogModel> {
         UserLog userLog = new UserLog();
         BeanUtils.copyProperties(userLogModel, userLog);
         userLog.setTTL(new Date(this.dbHelper.getTime() + userLogConf.getTimeOut()));
-        userLogDao.save(userLog);
+        userLogDao.insert(userLog);
     }
+
+
+
+
 }

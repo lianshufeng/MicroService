@@ -3,12 +3,13 @@ package com.github.microservice.auth.server.core.domain;
 import com.github.microservice.auth.client.model.UserModel;
 import com.github.microservice.auth.client.model.UserTokenModel;
 import com.github.microservice.auth.security.helper.UserLogHelper;
-import com.github.microservice.auth.security.model.EnterpriseUserCacheModel;
+import com.github.microservice.auth.security.model.OrganizationUserCacheModel;
 import com.github.microservice.components.data.mongo.mongo.domain.SuperEntity;
 import lombok.*;
 import lombok.experimental.Delegate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.TimeSeries;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,7 +47,7 @@ public class UserLog extends SuperEntity {
 
     //企业信息
     @Delegate
-    private EnterpriseUserCacheModel enterpriseUserModel = new EnterpriseUserCacheModel();
+    private OrganizationUserCacheModel organizationUserCacheModel = new OrganizationUserCacheModel();
 
     @Indexed
     private String url;

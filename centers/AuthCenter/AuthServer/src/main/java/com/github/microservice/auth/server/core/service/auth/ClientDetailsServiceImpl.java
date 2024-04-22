@@ -3,13 +3,11 @@ package com.github.microservice.auth.server.core.service.auth;
 import com.github.microservice.auth.server.core.auth.endpoint.AuthHelper;
 import com.github.microservice.auth.server.core.dao.ApplicationClientDao;
 import com.github.microservice.auth.server.core.domain.ApplicationClient;
+import com.github.microservice.auth.server.core.oauth2.client.ClientDetails;
+import com.github.microservice.auth.server.core.oauth2.exception.ClientRegistrationException;
+import com.github.microservice.auth.server.core.oauth2.service.ClientDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
-import org.springframework.security.oauth2.provider.ClientRegistrationException;
-import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.io.Serializable;
@@ -19,8 +17,6 @@ import java.util.Map;
 import java.util.Set;
 
 
-@Service
-@Primary
 public class ClientDetailsServiceImpl implements ClientDetailsService, Serializable {
 
     @Autowired

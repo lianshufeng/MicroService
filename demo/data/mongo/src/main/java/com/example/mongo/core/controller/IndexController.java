@@ -20,7 +20,7 @@ class IndexController {
 
     @RequestMapping("save")
     public Object save(User user) {
-        return this.userDao.save(user);
+        return this.userDao.insert(user);
     }
 
 }

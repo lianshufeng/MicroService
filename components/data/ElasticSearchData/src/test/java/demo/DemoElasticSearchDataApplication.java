@@ -42,7 +42,7 @@ public class DemoElasticSearchDataApplication extends ApplicationBootSuper {
         searchTable.setContent("_conten中文测试");
 
         SearchTableDao searchTableDao = applicationContext.getBean(SearchTableDao.class);
-        searchTableDao.save(searchTable);
+//        searchTableDao.save(searchTable);
 
         final ElasticsearchOperations elasticsearchTemplate = applicationContext.getBean(ElasticsearchOperations.class);
 //

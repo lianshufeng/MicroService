@@ -20,11 +20,11 @@ public enum AuthStreamType {
     RoleGroupUser(RoleGroupUserStreamModel.class, RoleGroupUserApplicationEvent.class),
 
     //企业
-    Enterprise(EnterpriseStreamModel.class, EnterpriseApplicationEvent.class),
+    Organization(OrganizationStreamModel.class, OrganizationApplicationEvent.class),
 
 
     //企业用户
-    EnterpriseUser(EnterpriseUserStreamModel.class,EnterpriseUserApplicationEvent.class),
+    OrganizationUser(OrganizationUserStreamModel.class, OrganizationUserApplicationEvent.class),
 
 
     //令牌

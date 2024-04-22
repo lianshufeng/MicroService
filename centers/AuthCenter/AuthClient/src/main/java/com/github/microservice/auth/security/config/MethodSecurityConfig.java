@@ -1,7 +1,7 @@
 package com.github.microservice.auth.security.config;
 
-import com.github.microservice.auth.security.helper.ResourcesAuthHelper;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.annotation.AnnotationMetadataExtractor;
 import org.springframework.security.access.annotation.SecuredAnnotationSecurityMetadataSource;
@@ -10,10 +10,12 @@ import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 /**
  * 角色选取控制器
  */
+@Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true, jsr250Enabled = true, proxyTargetClass = true)
 public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
 
@@ -50,7 +52,6 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
     ResourceAuthAnnotationMetadataExtractor resourceAuthAnnotationMetadataExtractor() {
         return new ResourceAuthAnnotationMetadataExtractor();
     }
-
 
 
 }

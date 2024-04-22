@@ -1,9 +1,6 @@
 package com.github.microservice.core.config;
 
-import com.github.microservice.core.helper.ApplicationContextHolder;
-import com.github.microservice.core.helper.JsonHelper;
-import com.github.microservice.core.helper.SpringBeanHelper;
-import com.github.microservice.core.helper.ViewHelper;
+import com.github.microservice.core.helper.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,6 +23,12 @@ public class PCoreConfig {
     @Bean
     public SpringBeanHelper springBeanHelper() {
         return new SpringBeanHelper();
+    }
+
+
+    @Bean
+    public ScanHelper scanHelper() {
+        return new ScanHelper();
     }
 
 

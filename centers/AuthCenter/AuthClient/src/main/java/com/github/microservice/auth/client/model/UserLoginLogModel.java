@@ -39,7 +39,7 @@ public class UserLoginLogModel {
     private LoginType loginType;
 
     //登陆名
-    private String loginName;
+    private String loginValue;
 
     //创建时间
     private long createTime;

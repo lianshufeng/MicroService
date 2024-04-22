@@ -1,7 +1,7 @@
 package com.github.microservice.auth.server.core.dao;
 
 import com.github.microservice.auth.server.core.dao.extend.RoleDaoExtend;
-import com.github.microservice.auth.server.core.domain.Enterprise;
+import com.github.microservice.auth.server.core.domain.Organization;
 import com.github.microservice.auth.server.core.domain.Role;
 import com.github.microservice.components.data.mongo.mongo.dao.MongoDao;
 
@@ -24,7 +24,7 @@ public interface RoleDao extends MongoDao<Role>, RoleDaoExtend {
      * @param name
      * @return
      */
-    boolean existsByEnterpriseAndName(Enterprise enterprise, String name);
+    boolean existsByOrganizationAndName(Organization organization, String name);
 
     /**
      * 角色组总是否存在
@@ -32,7 +32,7 @@ public interface RoleDao extends MongoDao<Role>, RoleDaoExtend {
      * @param name
      * @return
      */
-    Role findTop1ByEnterpriseAndName(Enterprise enterprise, String name);
+    Role findTop1ByOrganizationAndName(Organization organization, String name);
 
 
     /**

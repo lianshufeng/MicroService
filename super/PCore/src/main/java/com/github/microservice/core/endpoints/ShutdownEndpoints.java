@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * 安全下线当前模块
  */
-@RestController
+//@RestController
 public class ShutdownEndpoints extends SuperEndpoints {
 
     @Autowired

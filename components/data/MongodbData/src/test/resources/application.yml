@@ -1,10 +1,8 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://root:8756mongo2023@192.168.20.222:27017,192.168.20.222:27018,192.168.20.222:27019/mongo_test?replicaSet=MongoSetsShard1&authSource=admin
+      uri: mongodb://test:test@192.168.8.52:27017,192.168.8.52:27018,192.168.8.52:27019,192.168.8.52:27020/test?replicaSet=MongoSets
       auto-index-creation: true
-  main:
-    allow-circular-references: true
 #      database: test
 #      authentication-database: test
 #      host: 192.168.8.52:27017

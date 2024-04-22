@@ -57,7 +57,7 @@ public class LocalUserServiceFromToken implements LocalUserService {
         tokenLogin.setCurrentCheckCount(0);
         tokenLogin.setMaxCheckCount(userTokenLoginModel.getMaxCheckCount());
         this.dbHelper.saveTime(tokenLogin);
-        this.tokenLoginDao.save(tokenLogin);
+        this.tokenLoginDao.insert(tokenLogin);
 
         return ResultContent.build(ResultState.Success, token);
     }

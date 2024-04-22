@@ -7,11 +7,15 @@ import com.example.mongo.core.mapper.UserMapper2;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.tools.ant.taskdefs.Get;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 public class UserService {
@@ -25,14 +29,14 @@ public class UserService {
     @Autowired
     private UserMapper2 userMapper2;
 
-    @RequestMapping("find")
-    public Object find(String name) {
+    @RequestMapping(value = "find", method = RequestMethod.GET)
+    public Object find(@RequestParam(value = "name") String name) {
         return this.userDao.findByName(name);
     }
 
 
-    @RequestMapping("findByName")
-    public Object findByName(String name) {
+    @RequestMapping(value = "findByName", method = RequestMethod.GET)
+    public Object findByName(@RequestParam(value = "name") String name) {
         return this.userMapper2.findByName(name);
     }
 

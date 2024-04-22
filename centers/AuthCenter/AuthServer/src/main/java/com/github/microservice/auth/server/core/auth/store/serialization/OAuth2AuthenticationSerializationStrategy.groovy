@@ -2,15 +2,15 @@ package com.github.microservice.auth.server.core.auth.store.serialization
 
 
 import com.github.microservice.auth.server.core.auth.endpoint.AuthHelper
+import com.github.microservice.auth.server.core.oauth2.authentication.OAuth2Authentication
+import com.github.microservice.auth.server.core.oauth2.request.OAuth2Request
+import com.github.microservice.auth.server.core.oauth2.strategy.RedisTokenStoreSerializationStrategy
 import com.github.microservice.core.util.JsonUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.oauth2.provider.OAuth2Authentication
-import org.springframework.security.oauth2.provider.OAuth2Request
-import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStoreSerializationStrategy
 
 import java.nio.charset.StandardCharsets
 import java.util.stream.Collectors

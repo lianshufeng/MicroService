@@ -41,8 +41,8 @@ public class AccessTokenListener implements ApplicationListener<TokenApplication
 
         //取出对应用户id的令牌
         Optional.ofNullable(uid).ifPresent((userIds) -> {
-            this.tokenCache.findUserByUid(Arrays.asList(uid).toArray(new String[0])).values().forEach((enterpriseUserCacheItems) -> {
-                enterpriseUserCacheItems.forEach((item) -> {
+            this.tokenCache.findUserByUid(Arrays.asList(uid).toArray(new String[0])).values().forEach((organizationUserCacheItems) -> {
+                organizationUserCacheItems.forEach((item) -> {
                     removeToken.add(item.getAccessToken());
                 });
             });

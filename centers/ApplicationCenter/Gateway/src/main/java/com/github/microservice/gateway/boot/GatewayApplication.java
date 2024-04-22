@@ -1,22 +1,14 @@
 package com.github.microservice.gateway.boot;
 
-import com.github.microservice.app.core.config.ConsulRegisterConfig;
-import com.github.microservice.core.runner.BannerApplicationRunner;
-import org.springframework.boot.ApplicationRunner;
+import com.github.microservice.app.annotation.EnableApplicationClient;
+import com.github.microservice.core.boot.ApplicationBootSuper;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
 
 
-@EnableDiscoveryClient
+@EnableApplicationClient
 @ComponentScan("com.github.microservice.gateway.core")
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-@Import({ConsulRegisterConfig.class})
-public class GatewayApplication {
+public class GatewayApplication extends ApplicationBootSuper {
 
 
     /**
@@ -28,14 +20,5 @@ public class GatewayApplication {
         SpringApplication.run(GatewayApplication.class, args);
     }
 
-    /**
-     * 启动成功后打印 Banner
-     *
-     * @return
-     */
-    @Bean
-    public ApplicationRunner BannerApplicationRunner() {
-        return new BannerApplicationRunner();
-    }
 
 }

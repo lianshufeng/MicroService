@@ -4,12 +4,12 @@ import com.github.microservice.auth.security.conf.AuthSecurityConf;
 import com.github.microservice.auth.security.helper.AuthClientSecurityAuthenticationHelper;
 import com.github.microservice.auth.security.helper.UserLogHelper;
 import com.github.microservice.core.interceptors.UrlInterceptor;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 
 /**

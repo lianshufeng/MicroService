@@ -1,9 +1,8 @@
 package com.github.microservice.auth.server.core.auth.store.serialization
 
+import com.github.microservice.auth.server.core.oauth2.strategy.RedisTokenStoreSerializationStrategy
+import com.github.microservice.auth.server.core.oauth2.token.DefaultOAuth2RefreshToken
 import com.github.microservice.core.util.JsonUtil
-import org.springframework.security.oauth2.common.DefaultOAuth2RefreshToken
-import org.springframework.security.oauth2.common.OAuth2RefreshToken
-import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStoreSerializationStrategy
 
 import java.nio.charset.StandardCharsets
 

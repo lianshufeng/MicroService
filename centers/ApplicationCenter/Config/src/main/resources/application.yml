@@ -43,12 +43,13 @@ management:
   endpoints:
     web:
       exposure:
-        include: bus-refresh
-
+        include:
+          - bus-refresh
+          - health
 
 #调试或者输出日志
 logging:
   file:
     name: logs/${project.artifactId}.log
-debug: true
+#debug: true
 #trace: true

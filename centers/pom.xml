@@ -15,26 +15,17 @@
     <description>项目配置</description>
 
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
-    </properties>
-
 
     <modules>
 
 
         <!-- 平台 -->
-        <!--        <module>ApplicationCenter/Discovery</module>-->
         <module>ApplicationCenter/Gateway</module>
         <module>ApplicationCenter/Config</module>
 
         <!-- 鉴权中心 -->
         <module>AuthCenter</module>
 
-        <!-- 实验室-灰度环境 -->
-<!--        <module>Experiment</module>-->
 
 
     </modules>

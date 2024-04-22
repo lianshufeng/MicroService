@@ -13,7 +13,7 @@ public class AuthDetails extends UserTokenCacheItem {
 
     //企业信息
     @Delegate
-    private EnterpriseUserCacheModel enterpriseUserModel = new EnterpriseUserCacheModel();
+    private OrganizationUserCacheModel organizationUserCacheModel = new OrganizationUserCacheModel();
 
 
 }

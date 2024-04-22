@@ -13,6 +13,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface MongoDao<T extends SuperEntity> extends MongoRepository<T, String> {
 
 
-
+    boolean existsById(String id);
 
 }

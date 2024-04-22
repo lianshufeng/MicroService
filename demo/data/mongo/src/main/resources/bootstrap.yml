@@ -6,7 +6,6 @@ spring:
       matching-strategy: ant_path_matcher
   main: #允许循环引用
     allow-circular-references: true
-  # 应用名
   application:
     name: ${project.artifactId}
   # 当前读取配置文件的类型
@@ -20,4 +19,3 @@ spring:
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-      - org.springframework.cloud.netflix.ribbon.RibbonAutoConfiguration

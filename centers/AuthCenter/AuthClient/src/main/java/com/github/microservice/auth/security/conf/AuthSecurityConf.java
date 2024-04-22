@@ -1,6 +1,6 @@
 package com.github.microservice.auth.security.conf;
 
-import com.github.microservice.core.mvc.MVCConfiguration;
+import com.github.microservice.core.mvc.MVCRequestConfiguration;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +19,7 @@ public class AuthSecurityConf {
     private String[] needSecurityMethodUrl = new String[]{"/**"};
 
     // 在拦截的URL中排除不拦截的URL
-    private String[] excludeSecurityMethodUrl = new String[]{"/" + MVCConfiguration.StaticResources + "/**", "/error"};
+    private String[] excludeSecurityMethodUrl = new String[]{"/" + MVCRequestConfiguration.StaticResources + "/**", "/error"};
 
     //  用户中心的应用名称
     private String authCenter = "authserver";

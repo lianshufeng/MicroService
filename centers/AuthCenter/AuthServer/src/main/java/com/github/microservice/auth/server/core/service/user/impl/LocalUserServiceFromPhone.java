@@ -27,13 +27,14 @@ public class LocalUserServiceFromPhone implements LocalUserService {
 
     @Override
     public ResultContent<String> add(UserAuthModel userAuth) {
-        if (userDao.existsByPhone(userAuth.getLoginValue())) {
-            return ResultContent.build(ResultState.UserExists);
+        User user = userDao.findByPhone(userAuth.getLoginValue());
+        if (user != null) {
+            return ResultContent.build(ResultState.UserExists, user.getId());
         }
-        User user = new User();
+        user = new User();
         user.setPhone(userAuth.getLoginValue());
         user.setPassWord(this.passwordEncoder.encode(userAuth.getPassWord()));
-        this.userDao.save(user);
+        this.userDao.insert(user);
         return ResultContent.build(ResultState.Success, user.getId());
     }
 

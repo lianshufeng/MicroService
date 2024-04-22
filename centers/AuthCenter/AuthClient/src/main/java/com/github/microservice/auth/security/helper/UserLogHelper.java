@@ -5,6 +5,7 @@ import com.github.microservice.auth.security.model.AuthDetails;
 import com.github.microservice.auth.security.model.UserLogModel;
 import com.github.microservice.core.util.net.IPUtil;
 import com.github.microservice.core.util.os.SystemUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

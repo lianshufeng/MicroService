@@ -10,6 +10,7 @@ spring:
     consul:
       discovery:
         hostname: localhost    # 配置实例地址
+        prefer-ip-address: true # ip自动注册
         port: ${server.port}
         health-check-path: /actuator/health  # 检测实例健康
         health-check-interval: 10s   # 每隔10s检查
@@ -47,10 +48,13 @@ spring:
 
 
 
-
-
-
-
+springdoc:
+  api-docs:
+    # 是否开启接口文档
+    enabled: true
+  swagger-ui:
+    # 持久化认证数据，如果设置为 true，它会保留授权数据并且不会在浏览器关闭/刷新时丢失
+    persistAuthorization: true
 
 #调试或者输出日志
 logging:

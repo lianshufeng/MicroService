@@ -1,6 +1,8 @@
 package com.github.microservice.core.util.response;
 
 import com.github.microservice.core.util.response.model.MimeType;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -10,8 +12,6 @@ import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;

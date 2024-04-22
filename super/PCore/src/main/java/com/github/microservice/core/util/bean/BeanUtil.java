@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+import org.springframework.core.StandardReflectionParameterNameDiscoverer;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,7 +54,7 @@ public class BeanUtil {
     };
 
     // 参数名发现
-    private final static LocalVariableTableParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
+    private final static StandardReflectionParameterNameDiscoverer parameterNameDiscoverer = new StandardReflectionParameterNameDiscoverer();
 
     /**
      * javaBean转map

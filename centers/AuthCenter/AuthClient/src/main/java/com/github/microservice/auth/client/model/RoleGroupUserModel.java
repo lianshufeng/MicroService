@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class RoleGroupUserModel {
 
     //企业
-    private String enterprise;
+    private String organization;
 
     //角色组
     private String roleGroup;

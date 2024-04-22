@@ -31,6 +31,7 @@ public interface UserDao extends MongoDao<User>, UserDaoExtend {
     boolean existsByEmail(String email);
 
 
+
     /**
      * @param phone
      * @return

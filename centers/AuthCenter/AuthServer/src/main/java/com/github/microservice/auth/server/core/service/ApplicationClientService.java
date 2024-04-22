@@ -28,7 +28,7 @@ public class ApplicationClientService {
         client.setClientId(clientId);
         client.setSecret(passwordEncoder.encode(passWord));
         client.setAuthorizedGrantTypes(authorizedGrantTypes);
-        this.applicationClientDao.save(client);
+        this.applicationClientDao.insert(client);
         return ResultContent.build(ResultState.Success, client.getId());
     }
 

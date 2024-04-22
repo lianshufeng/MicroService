@@ -2,6 +2,7 @@ package com.github.microservice.components.activemq.config;
 
 import com.github.microservice.components.activemq.conf.MQConf;
 import com.github.microservice.components.activemq.constant.MQConstant;
+import jakarta.jms.ConnectionFactory;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.ActiveMQPrefetchPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
 
-import javax.jms.ConnectionFactory;
 
 @Configuration
 public class ConsumerConfiguration {

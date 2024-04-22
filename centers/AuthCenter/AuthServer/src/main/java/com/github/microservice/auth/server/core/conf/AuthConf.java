@@ -31,4 +31,7 @@ public class AuthConf {
     private boolean onlyOneDeviceLogin = true;
 
 
+    private String jwtKey = "AuthCenter_dev";
+
+
 }

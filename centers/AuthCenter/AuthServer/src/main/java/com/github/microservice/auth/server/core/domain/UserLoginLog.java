@@ -7,6 +7,8 @@ import lombok.*;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.TimeSeries;
+import org.springframework.data.mongodb.core.timeseries.Granularity;
 
 /**
  * 用户登陆日志
@@ -58,7 +60,7 @@ public class UserLoginLog extends SuperEntity {
 
     //登陆名
     @Indexed
-    private String loginName;
+    private String loginValue;
 
     //访问令牌超时时间
     private Integer accessTokenTimeOut;

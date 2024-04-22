@@ -10,9 +10,9 @@ public interface RoleDaoExtend {
     /**
      * 通过身份明查询角色
      *
-     * @param enterpriseId
+     * @param organizationId
      * @param identity
      * @return
      */
-    List<Role> findByIdentity(String enterpriseId, String... identity);
+    List<Role> findByIdentity(String organizationId, String... identity);
 }

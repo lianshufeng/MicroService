@@ -5,17 +5,17 @@ public class ExampleConstant {
     /**
      * 企业id
      */
-    public static final String EnterpriseId = "610195c64a0e1e0e5fedc759";
+    public static final String OrganizationId = "66228567b808ab519d57298e";
 
     /**
      * 用户id
      */
-    public static final String UserId = "60e6b44cf9251c37cf987b63";
+    public static final String UserId = "6622844a72827126f75d4ef7";
 
     /**
      * 角色id
      */
-    public static final String RoleId = "610196274a0e1e0e5fedc75a";
+    public static final String RoleId = "662287a3fba4260d5d5ab12d";
 
 
     /**
@@ -26,7 +26,7 @@ public class ExampleConstant {
     /**
      * 角色组id
      */
-    public static final String RoleGroupId = "61021e88b5b66f794fb22543";
+    public static final String RoleGroupId = "66228894f3f24f253374e2f3";
 
 
     /**

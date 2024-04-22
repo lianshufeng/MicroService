@@ -1,12 +1,12 @@
 package com.example.mongo.core.domain;
 
 import com.github.microservice.components.data.jpa.domain.SuperEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
 
 @Data
 @Entity

@@ -17,12 +17,14 @@ import org.springframework.web.util.pattern.PathPatternParser;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
 @Slf4j
-@Configuration
+//@Configuration
 public class CorsWebFilterConfig {
 
 
@@ -68,9 +70,9 @@ public class CorsWebFilterConfig {
                         .forEach(kv ->
                         {
                             // Vary只需要去重即可
-                            if (kv.getKey().equals(HttpHeaders.VARY))
+                            if (kv.getKey().equals(HttpHeaders.VARY)) {
                                 kv.setValue(kv.getValue().stream().distinct().collect(Collectors.toList()));
-                            else {
+                            } else {
                                 List<String> value = new ArrayList<>();
                                 if (kv.getValue().contains(ANY)) {  //如果包含*，则取*
                                     value.add(ANY);

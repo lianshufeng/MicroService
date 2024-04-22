@@ -25,11 +25,11 @@ public @interface ResourceAuth {
     String[] value();
 
     /**
-     * 资源类型
+     * 资源类型,注意默认为用户权限
      *
      * @return
      */
-    AuthType type() default AuthType.Enterprise;
+    AuthType type() default AuthType.Platform;
 
 
     /**

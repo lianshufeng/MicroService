@@ -9,14 +9,14 @@ import com.github.microservice.auth.server.core.dao.UserTokenDao;
 import com.github.microservice.auth.server.core.domain.User;
 import com.github.microservice.auth.server.core.domain.UserLoginLog;
 import com.github.microservice.auth.server.core.domain.UserToken;
+import com.github.microservice.auth.server.core.oauth2.token.OAuth2AccessToken;
 import com.github.microservice.components.data.mongo.mongo.helper.DBHelper;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
@@ -98,7 +98,7 @@ public class AuthHelper {
                 Optional.ofNullable(oAuth2AccessToken.getRefreshToken()).ifPresent((refreshToken) -> {
                     userLoginLog.setRefreshToken(refreshToken.getValue());
                 });
-                this.userLoginLogDao.save(userLoginLog);
+                this.userLoginLogDao.insert(userLoginLog);
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -136,7 +136,7 @@ public class AuthHelper {
             userToken.setClientId(authProcess.getClientId());
             userToken.setTTL(new Date(this.dbHelper.getTime() + authProcess.getRefreshTokenTimeOut() * 1000L));
             this.dbHelper.saveTime(userToken);
-            this.userTokenDao.save(userToken);
+            this.userTokenDao.insert(userToken);
         }
     }
 

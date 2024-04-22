@@ -30,7 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, Serializable 
 
     @Autowired
     private UserManager userManager;
-
+    //
     @Autowired
     private AuthHelper authHelper;
 
@@ -54,6 +54,12 @@ public class UserDetailsServiceImpl implements UserDetailsService, Serializable 
     @SneakyThrows
     public UserDetails loadUserByUsername(String loginValue) throws UsernameNotFoundException {
         final AuthProcess authProcess = authHelper.getAuthProcess();
+        return loadUserByUsername(loginValue, authProcess);
+    }
+
+
+    @SneakyThrows
+    public UserDetails loadUserByUsername(String loginValue, AuthProcess authProcess) {
         com.github.microservice.auth.server.core.domain.User user = null;
         //生成令牌
         if (authProcess.getGrantType() == GrantType.password) {
@@ -85,4 +91,5 @@ public class UserDetailsServiceImpl implements UserDetailsService, Serializable 
                     return TimeText + TimeUtil.getTime();
                 }));
     }
+
 }

@@ -51,8 +51,8 @@ public class AuthHelper {
      *
      * @return
      */
-    public String getEnterPriseId() {
-        return this.authClientSecurityAuthenticationHelper.getEnterPriseId();
+    public String getOrgId() {
+        return this.authClientSecurityAuthenticationHelper.getOrgId();
     }
 
 

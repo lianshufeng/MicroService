@@ -69,11 +69,11 @@ public class ResourceAuthSecuredAnnotationSecurityMetadataSource extends Secured
      * @return
      */
     private Collection<ConfigAttribute> processAnnotation(Annotation a) {
+        Collection<ConfigAttribute> ret = new ArrayList<>();
         if (a == null) {
-            return null;
+            return ret;
         }
 
-        Collection<ConfigAttribute> ret = new ArrayList<>();
         if (a instanceof ResourceAuths) {
             processAnnotation(ret, resourceAuthAnnotationMetadataExtractor.extractAttributes((ResourceAuths) a));
         } else if (a instanceof ResourceAuth) {

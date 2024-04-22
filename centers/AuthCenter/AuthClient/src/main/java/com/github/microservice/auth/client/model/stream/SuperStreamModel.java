@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = EnterpriseStreamModel.class, name = "EnterpriseStreamModel"),
-        @JsonSubTypes.Type(value = EnterpriseUserStreamModel.class, name = "EnterpriseUserStreamModel"),
+        @JsonSubTypes.Type(value = OrganizationStreamModel.class, name = "OrganizationStreamModel"),
+        @JsonSubTypes.Type(value = OrganizationUserStreamModel.class, name = "OrganizationUserStreamModel"),
         @JsonSubTypes.Type(value = RoleStreamModel.class, name = "RoleStreamModel"),
         @JsonSubTypes.Type(value = TokenStreamModel.class, name = "TokenStreamModel"),
         @JsonSubTypes.Type(value = RoleGroupUserStreamModel.class, name = "RoleGroupUserStreamModel"),

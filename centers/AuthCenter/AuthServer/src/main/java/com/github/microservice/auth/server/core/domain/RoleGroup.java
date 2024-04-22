@@ -18,7 +18,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @CompoundIndexes({
-        @CompoundIndex(name = "enterprise_name_unique", def = "{enterprise:1, name:1}", unique = true)
+        @CompoundIndex(name = "organization_name_unique", def = "{organization:1, name:1}", unique = true)
 })
 public class RoleGroup extends SuperEntity {
 
@@ -28,7 +28,7 @@ public class RoleGroup extends SuperEntity {
      */
     @Indexed
     @DBRef(lazy = true)
-    private Enterprise enterprise;
+    private Organization organization;
 
 
     //角色组的名称

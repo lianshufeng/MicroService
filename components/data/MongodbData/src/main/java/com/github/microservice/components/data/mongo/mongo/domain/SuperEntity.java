@@ -1,5 +1,7 @@
 package com.github.microservice.components.data.mongo.mongo.domain;
 
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -8,8 +10,6 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.data.mongodb.core.index.Indexed;
 
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 
 /**

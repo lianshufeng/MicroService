@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>权限中心 - 用户行为 </title>
+    <!-- Import style -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/element-plus/dist/index.css"/>
+    <!-- Import Vue 3 -->
+    <script src="//cdn.jsdelivr.net/npm/vue@3"></script>
+    <!-- Import component library -->
+    <script src="//cdn.jsdelivr.net/npm/element-plus"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+</head>
+<body>
+<input type="hidden" th:value="${script_set_baseUrl}" value="http://192.168.0.37:8080" id="script_set_baseUrl">
+
+
+<div id="app">
+    <el-table :data="tableData" border>
+        <el-table-column prop="userModel.phone" label="手机"></el-table-column>
+        <el-table-column prop="applicationName" label="应用名"></el-table-column>
+        <el-table-column prop="url" label="接口"></el-table-column>
+        <el-table-column prop="ua" label="UA"></el-table-column>
+        <el-table-column prop="ip" label="ip"></el-table-column>
+        <el-table-column prop="costTime" label="消耗"></el-table-column>
+        <el-table-column prop="log" label="日志"></el-table-column>
+        <el-table-column prop="exception" label="异常" :formatter="formatInfo"></el-table-column>
+
+    </el-table>
+
+    <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="[10, 20, 30, 40]"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total"
+    ></el-pagination>
+</div>
+
+
+<script>
+    const App = {
+        data() {
+            return {
+                tableData: [],
+                total: 0,
+                currentPage: 1,
+                pageSize: 20,
+            };
+        },
+        mounted() {
+            this.fetchData();
+        },
+        methods: {
+            formatInfo(row) {
+                return row.exception ? JSON.stringify(row.exception) : "";
+            },
+            fetchData() {
+                const script_set_baseUrl = document.getElementById("script_set_baseUrl").value
+                axios.get(script_set_baseUrl + '/manager/userlog/list?page=' + (this.currentPage - 1) + '&size=' + (this.pageSize))
+                    .then(response => {
+                        // 请求成功的回调函数
+                        this.total = response.data.content.totalElements
+                        this.tableData = response.data.content.content
+                    })
+                    .catch(error => {
+                        // 请求失败的回调函数
+                        console.error(error);
+                    });
+
+
+            },
+            handleSizeChange(newSize) {
+                this.pageSize = newSize;
+                this.currentPage = 1; // 切换每页数量时，回到第一页
+                this.fetchData();
+            },
+            handleCurrentChange(newPage) {
+                this.currentPage = newPage;
+                this.fetchData();
+            },
+            generateData() {
+                // 生成模拟数据
+                const data = [];
+                for (let i = 0; i < 100; i++) {
+                    data.push({
+                        name: `User ${i + 1}`,
+                        age: Math.floor(Math.random() * 50) + 18,
+                    });
+                }
+                return data;
+            },
+        },
+    };
+    const app = Vue.createApp(App);
+    app.use(ElementPlus);
+    app.mount("#app");
+</script>
+</body>
+</html>

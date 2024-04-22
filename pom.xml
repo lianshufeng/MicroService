@@ -18,7 +18,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
     </properties>
 
 
@@ -33,6 +33,17 @@
         <!-- 中心 -->
         <module>centers</module>
 
+
+        <!--        <module>demo/data/mysql</module>-->
+        <!--        <module>demo/data/mongo</module>-->
+
+        <!--        <module>demo/cloudapp</module>-->
+        <!--        <module>demo/auth</module>-->
+
+<!--        <module>application/BatchCollection</module>-->
+
+
+        <module>demo/auth</module>
 
     </modules>
 

@@ -1,0 +1,5 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://root:8756mongo2021@192.168.31.132:27017,192.168.31.132:27018/test?authSource=admin
+      auto-index-creation: true

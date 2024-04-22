@@ -1,0 +1,13 @@
+spring:
+  data:
+    redis:
+      host: 192.168.31.132
+      port: 6379
+      database: 6
+      password: redis_passwd_2024
+
+
+
+
+
+

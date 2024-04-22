@@ -1,6 +1,7 @@
 package com.github.microservice.app.core.config;
 
 import com.ecwid.consul.v1.ConsulClient;
+import com.ecwid.consul.v1.ConsulRawClient;
 import com.github.microservice.app.helper.ConsulHelper;
 import com.github.microservice.app.work.ConsulRegisterWork;
 import lombok.*;
@@ -23,6 +24,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 @Slf4j
 @Configuration
@@ -51,7 +53,7 @@ public class ConsulRegisterConfig {
      * @return
      */
     @Bean
-    public ConsulClient consulClient() {
+    public ConsulClient consulClient(Supplier<ConsulRawClient.Builder> consulRawClientBuilderSupplier) {
         //取出最佳的主机
         ConsulHelper.HostItem hostItem = consulHelper().getPreferredHost(consulProperties);
         Optional.ofNullable(hostItem.getHost()).ifPresent((host) -> {
@@ -60,7 +62,7 @@ public class ConsulRegisterConfig {
         Optional.ofNullable(hostItem.getPort()).ifPresent((port) -> {
             consulProperties.setPort(port);
         });
-        return ConsulAutoConfiguration.createConsulClient(consulProperties);
+        return ConsulAutoConfiguration.createConsulClient(consulProperties, consulRawClientBuilderSupplier);
     }
 
 

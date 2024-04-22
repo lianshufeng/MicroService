@@ -1,10 +1,12 @@
 #默认端口号
 server:
   port: ${GetWayCenter.port}
-  max-http-header-size: 10MB
+  max-http-request-header-size: 10MB
 
 #允许消息总线
 spring:
+  main:
+    web-application-type: reactive
   cloud:
     consul:
       discovery:
@@ -18,7 +20,6 @@ spring:
         instance-id: ${spring.application.name}:${server.port}
       host: ${ApplicationCenter.url}
       port: ${ApplicationCenter.port}
-
     gateway:
       filters:
         - name: RequestSize
@@ -37,6 +38,15 @@ spring:
           uri: lb://userserver/ucenter
           predicates:
             - Path=/ucenter/**
+      globalcors:
+        cors-configurations: #跨域
+          '[/**]':
+            allowedOrigins: '*'
+            allowedMethods:
+              - GET
+              - POST
+            allowedHeaders: '*'
+            maxAge: 60
     #kafka
     stream:
       kafka:
@@ -54,6 +64,13 @@ spring:
     sampler:
       probability: ${Zipkin.sampler.probability}
 
+
+limit:
+  roles:
+    blocked:
+      url:
+        - "**/manager/**"
+        - "**/endpoints/**"
 
 
 

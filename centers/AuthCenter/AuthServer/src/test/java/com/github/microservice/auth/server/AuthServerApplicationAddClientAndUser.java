@@ -24,10 +24,10 @@ public class AuthServerApplicationAddClientAndUser extends ApplicationBootSuper 
         ConfigurableApplicationContext applicationContext = SpringApplication.run(AuthServerApplicationAddClientAndUser.class, args);
 
         UserDao userDao = applicationContext.getBean(UserDao.class);
-        userDao.save(User.builder().phone("15123241353").passWord(new BCryptPasswordEncoder().encode("xiaofeng")).build());
+        userDao.insert(User.builder().phone("15123241353").passWord(new BCryptPasswordEncoder().encode("xiaofeng")).build());
 
         ApplicationClientDao applicationClientDao = applicationContext.getBean(ApplicationClientDao.class);
-        applicationClientDao.save(ApplicationClient.builder()
+        applicationClientDao.insert(ApplicationClient.builder()
                 .clientId("test")
                 .secret(new BCryptPasswordEncoder().encode("xiaofeng"))
                 .authorizedGrantTypes(Set.of("client_credentials", "password", "refresh_token"))

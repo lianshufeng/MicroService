@@ -1,5 +1,7 @@
 package com.github.microservice.components.data.es.domain;
 
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -10,8 +12,6 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 
 /**

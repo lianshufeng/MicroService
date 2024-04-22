@@ -9,52 +9,55 @@ import com.github.microservice.auth.client.model.stream.TokenStreamModel;
 import com.github.microservice.auth.client.model.stream.UserStreamModel;
 import com.github.microservice.auth.client.service.UserService;
 import com.github.microservice.auth.client.type.*;
-import com.github.microservice.auth.security.util.TimeUtil;
+import com.github.microservice.auth.security.model.UserAuthenticationToken;
 import com.github.microservice.auth.server.core.auth.endpoint.AuthHelper;
+import com.github.microservice.auth.server.core.auth.endpoint.AuthProcess;
 import com.github.microservice.auth.server.core.conf.AuthConf;
 import com.github.microservice.auth.server.core.dao.TokenLoginDao;
 import com.github.microservice.auth.server.core.dao.UserDao;
+import com.github.microservice.auth.server.core.dao.UserLoginLogDao;
 import com.github.microservice.auth.server.core.dao.UserTokenDao;
 import com.github.microservice.auth.server.core.domain.User;
+import com.github.microservice.auth.server.core.domain.UserLoginLog;
+import com.github.microservice.auth.server.core.domain.UserToken;
+import com.github.microservice.auth.server.core.helper.TokenHelper;
+import com.github.microservice.auth.server.core.oauth2.authentication.OAuth2Authentication;
+import com.github.microservice.auth.server.core.oauth2.request.OAuth2Request;
+import com.github.microservice.auth.server.core.oauth2.service.AuthorizationServerTokenServices;
+import com.github.microservice.auth.server.core.oauth2.store.TokenStore;
+import com.github.microservice.auth.server.core.oauth2.token.DefaultOAuth2AccessToken;
+import com.github.microservice.auth.server.core.oauth2.token.DefaultOAuth2RefreshToken;
+import com.github.microservice.auth.server.core.oauth2.token.OAuth2AccessToken;
+import com.github.microservice.auth.server.core.oauth2.token.OAuth2RefreshToken;
 import com.github.microservice.auth.server.core.service.auth.UserDetailsServiceImpl;
 import com.github.microservice.auth.server.core.service.user.UserManager;
 import com.github.microservice.auth.server.core.service.user.mode.LocalUserTokenLoginModel;
+import com.github.microservice.auth.server.core.util.JWTUtil;
 import com.github.microservice.components.data.mongo.mongo.helper.DBHelper;
-import com.github.microservice.core.util.bean.BeanUtil;
-import com.github.microservice.core.util.result.InvokerResult;
+import com.github.microservice.core.util.JsonUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.cglib.beans.BeanMap;
+import org.springframework.context.annotation.Primary;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.common.OAuth2RefreshToken;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.OAuth2Request;
-import org.springframework.security.oauth2.provider.TokenRequest;
-import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
-import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
-import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
 @Service
+@Primary
 public class UserServiceImpl implements UserService {
 
     public static final AuthStreamType StreamType = AuthStreamType.User;
@@ -62,8 +65,6 @@ public class UserServiceImpl implements UserService {
     @Value("${server.port}")
     private int port;
 
-    @Autowired
-    private TokenEndpoint tokenEndpoint;
 
     @Autowired
     private UserManager userManager;
@@ -102,7 +103,16 @@ public class UserServiceImpl implements UserService {
     private TokenLoginDao tokenLoginDao;
 
     @Autowired
+    private UserLoginLogDao userLoginLogDao;
+
+    @Autowired
     private DBHelper dbHelper;
+
+    @Autowired
+    private TokenHelper tokenHelper;
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
 
     @Override
@@ -153,23 +163,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @SneakyThrows
-    public ResultContent<LoginTokenModel> login(UserAuthLoginModel user) {
-        validateUserAuth(user);
+    @Transactional
+    public ResultContent<LoginTokenModel> login(UserAuthLoginModel loginModel) {
+        validateUserAuth(loginModel);
 
         // 验证用户账号和密码是否正确
-        com.github.microservice.auth.server.core.domain.User localUser = this.userManager.get(user.getLoginType()).checkAndGet(user);
-        if (localUser == null) {
+        com.github.microservice.auth.server.core.domain.User user = this.userManager.get(loginModel.getLoginType()).checkAndGet(loginModel);
+        if (user == null) {
             return ResultContent.build(ResultState.UserPasswordError);
         }
         // 用户禁用
-        if (localUser.isDisable()) {
+        if (user.isDisable()) {
             return ResultContent.build(ResultState.UserDisable);
         }
 
 
         //登陆则注销之前登陆的所有令牌,单一设备只能允许登陆一次
         if (authConf.isOnlyOneDeviceLogin()) {
-            Optional.ofNullable(this.userTokenDao.findByClientIdAndDeviceTypeAndUser(user.getClientId(), user.getDeviceType(), User.build(localUser.getId()))).ifPresent(it -> {
+            Optional.ofNullable(this.userTokenDao.findByClientIdAndDeviceTypeAndUser(loginModel.getClientId(), loginModel.getDeviceType(), User.build(user.getId()))).ifPresent(it -> {
                 it.forEach((userToken) -> {
                     //标记本条数据过期，等待定时器删除
                     this.userTokenDao.setTTL(userToken.getRefreshToken(), 0l);
@@ -179,13 +190,20 @@ public class UserServiceImpl implements UserService {
                     });
                 });
             });
-
         }
 
+
+        //转换为 UserDetails模型
+        AuthProcess authProcess = new AuthProcess();
+        BeanUtils.copyProperties(loginModel, authProcess);
+        authProcess.setGrantType(GrantType.password);
+        final UserDetails userDetails = this.userDetailsService.loadUserByUsername(loginModel.getLoginValue(), authProcess);
+
+
         //转发到oAuth2.0 进行登陆
-        LoginTokenModel token = oAuthToken(user);
+        LoginTokenModel token = oAuthToken(loginModel, userDetails, user);
         if (token != null && StringUtils.hasText(token.getAccess_token())) {
-            this.tokenEventStreamHelper.publish(AuthStreamType.Token, new TokenStreamModel(AuthEventType.Add, token.getAccess_token(), new Object[]{localUser.getId()}));
+            this.tokenEventStreamHelper.publish(AuthStreamType.Token, new TokenStreamModel(AuthEventType.Add, token.getAccess_token(), new Object[]{user.getId()}));
         }
         return ResultContent.buildContent(token);
     }
@@ -194,7 +212,7 @@ public class UserServiceImpl implements UserService {
     public ResultContent<UserModel> queryFromLoginType(LoginType loginType, String loginValue) {
         User user = this.userManager.get(loginType).getUser(loginValue);
         if (user == null) {
-            return ResultContent.build(ResultState.UserExists);
+            return ResultContent.build(ResultState.UserNotExists);
         }
         return ResultContent.buildContent(toModel(user));
     }
@@ -203,7 +221,7 @@ public class UserServiceImpl implements UserService {
     public ResultContent<Void> updateLoginPassword(String uid, String passWord) {
         User user = this.userDao.findTop1ById(uid);
         if (user == null) {
-            return ResultContent.buildContent(ResultState.UserExists);
+            return ResultContent.build(ResultState.UserNotExists);
         }
         boolean success = this.userDao.updatePassword(uid, passwordEncoder.encode(passWord));
         if (success) {
@@ -216,7 +234,7 @@ public class UserServiceImpl implements UserService {
     public ResultContent<Void> checkLoginPassword(String uid, String passWord) {
         User user = this.userDao.findTop1ById(uid);
         if (user == null) {
-            return ResultContent.buildContent(ResultState.UserExists);
+            return ResultContent.build(ResultState.UserNotExists);
         }
         return ResultContent.build(passwordEncoder.matches(passWord, user.getPassWord()) ? ResultState.Success : ResultState.UserPasswordError);
     }
@@ -228,26 +246,11 @@ public class UserServiceImpl implements UserService {
         if (oAuth2AccessToken == null) {
             return ResultContent.build(ResultState.AccessTokenError);
         }
-        //查询令牌详情
-        final OAuth2Authentication oAuth2Authentication = this.tokenStore.readAuthentication(oAuth2AccessToken.getValue());
-
-        //令牌创建时间
-        Long createTime = null;
-        for (GrantedAuthority authority : oAuth2Authentication.getAuthorities()) {
-            String auth = authority.getAuthority();
-            if (auth.indexOf(UserDetailsServiceImpl.TimeText) == 0) {
-                createTime = Long.parseLong(auth.substring(UserDetailsServiceImpl.TimeText.length()));
-                break;
-            }
-        }
-
-        // uid
-        final String uid = oAuth2Authentication.getName().substring(oAuth2Authentication.getName().indexOf(":") + 1);
-
-        return ResultContent.buildContent(oAuth2AccessTokenToUserTokenModel(createTime, uid, oAuth2AccessToken));
+        return ResultContent.buildContent(oAuth2AccessTokenToUserTokenModel(oAuth2AccessToken));
     }
 
     @Override
+    @SneakyThrows
     public ResultContent<UserTokenModel> refreshToken(final String refreshToken) {
         Assert.hasText(refreshToken, "刷新令牌不能为空");
         final OAuth2RefreshToken oAuth2RefreshToken = this.tokenStore.readRefreshToken(refreshToken);
@@ -259,28 +262,31 @@ public class UserServiceImpl implements UserService {
             return ResultContent.build(ResultState.RefreshTokenError);
         }
 
-        //构建token的生成参数
-        final OAuth2Request oAuth2Request = oAuth2Authentication.getOAuth2Request();
 
-        //刷新token的参数
-        final Map<String, String> requestParameters = Map.of("grant_type", GrantType.refresh_token.name(), "client_id", oAuth2Request.getRequestParameters().get("client_id"), "refresh_token", refreshToken);
-
-        //设置请求token的参数
-        this.authHelper.put(requestParameters);
-        OAuth2AccessToken newToken = null;
-        try {
-            final TokenRequest tokenRequest = new TokenRequest(requestParameters, oAuth2Request.getClientId(), oAuth2Request.getScope(), oAuth2Request.getGrantType());
-            newToken = this.tokenServices.refreshAccessToken(refreshToken, tokenRequest);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            this.authHelper.release(newToken);
+        //查询对应的访问令牌,如果访问令牌存在则删除
+        final OAuth2AccessToken accessToken = this.tokenStore.getAccessToken(oAuth2Authentication);
+        if (accessToken != null) {
+            this.tokenStore.removeAccessTokenUsingRefreshToken(oAuth2RefreshToken);
         }
-        //用户id
-        final String uid = oAuth2Authentication.getName().substring(oAuth2Authentication.getName().indexOf(":") + 1);
+
+
+        //取出存入信息
+        final JWTUtil.JwtModel jwtModel = this.tokenHelper.parser(oAuth2RefreshToken.getValue());
+        final String uid = jwtModel.getSubject();
+
+
+        //转换为登录模型
+        final UserAuthLoginModel loginModel = JsonUtil.toObject(JsonUtil.toJson(jwtModel.getClaims()), UserAuthLoginModel.class);
+
+        //创建访问令牌
+        DefaultOAuth2AccessToken oAuth2AccessToken = new DefaultOAuth2AccessToken(this.tokenHelper.create(uid, jwtModel.getClaims(), loginModel.getAccessTokenTimeOut() * 1000));
+        oAuth2AccessToken.setRefreshToken(oAuth2RefreshToken);
+        oAuth2AccessToken.setExpiration(new Date(dbHelper.getTime() + loginModel.getAccessTokenTimeOut() * 1000));
+        tokenStore.storeAccessToken(oAuth2AccessToken, oAuth2Authentication);
+
 
         //转换为用户令牌模型
-        final UserTokenModel userTokenModel = oAuth2AccessTokenToUserTokenModel(TimeUtil.getTime(), uid, newToken);
+        final UserTokenModel userTokenModel = oAuth2AccessTokenToUserTokenModel(oAuth2AccessToken);
 
         if (userTokenModel != null && StringUtils.hasText(userTokenModel.getAccessToken())) {
             this.tokenEventStreamHelper.publish(AuthStreamType.Token, new TokenStreamModel(AuthEventType.Add, userTokenModel.getAccessToken(), new Object[]{uid}));
@@ -343,13 +349,18 @@ public class UserServiceImpl implements UserService {
     public ResultContent<Void> unRegister(String uid, String passWord) {
         User user = this.userDao.findTop1ById(uid);
         if (user == null) {
-            return ResultContent.buildContent(ResultState.UserExists);
+            return ResultContent.build(ResultState.UserNotExists);
         }
         if (!passwordEncoder.matches(passWord, user.getPassWord())) {
             return ResultContent.build(ResultState.UserPasswordError);
         }
         this.logoutFromUid(null, uid);
-        return ResultContent.build(this.userDao.unRegister(uid));
+
+        boolean success = this.userDao.unRegister(uid);
+        if (success) {
+            this.authEventStreamHelper.publish(new UserStreamModel(AuthEventType.UnRegister, uid));
+        }
+        return ResultContent.build(success);
     }
 
     /**
@@ -375,16 +386,21 @@ public class UserServiceImpl implements UserService {
      * @param oAuth2AccessToken
      * @return
      */
-    private UserTokenModel oAuth2AccessTokenToUserTokenModel(long time, String uid, OAuth2AccessToken oAuth2AccessToken) {
+    private UserTokenModel oAuth2AccessTokenToUserTokenModel(OAuth2AccessToken oAuth2AccessToken) {
         if (oAuth2AccessToken == null) {
             return null;
         }
+
+        //jwt
+        String uid = this.tokenHelper.parser(oAuth2AccessToken.getValue()).getSubject();
+
 
         UserTokenModel userTokenModel = new UserTokenModel();
         //访问令牌
         userTokenModel.setAccessToken(oAuth2AccessToken.getValue());
         //到期时间
-        userTokenModel.setExpireTime(time + oAuth2AccessToken.getExpiresIn() * 1000);
+//        userTokenModel.setExpireTime(time + oAuth2AccessToken.getExpiresIn() * 1000);
+        userTokenModel.setExpireTime(((Integer) oAuth2AccessToken.getExpiresIn()).longValue());
         //用户id
         userTokenModel.setUid(uid);
         return userTokenModel;
@@ -410,52 +426,84 @@ public class UserServiceImpl implements UserService {
      * @param user
      */
     @SneakyThrows
-    private LoginTokenModel oAuthToken(UserAuthLoginModel user) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+    public LoginTokenModel oAuthToken(UserAuthLoginModel loginModel, UserDetails userDetails, User user) {
+        OAuth2Request storedRequest = new OAuth2Request(loginModel.getClientId());
 
 
-        //转换为用户登陆模型
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+        UserAuthenticationToken userAuthenticationToken = new UserAuthenticationToken(null);
+        userAuthenticationToken.setPrincipal(userDetails);
 
-        map.put("username", List.of(user.getLoginValue()));
-        map.put("password", List.of(user.getPassWord()));
-        map.put("grant_type", List.of("password"));
-        map.put("client_id", List.of(user.getClientId()));
-        map.put("client_secret", List.of(user.getClientSecret()));
-
-        Optional.ofNullable(user.getDeviceType()).ifPresent((it) -> {
-            map.put("deviceType", List.of(it.name()));
-        });
-        Optional.ofNullable(user.getDeviceUUid()).ifPresent((it) -> {
-            map.put("deviceUUid", List.of(it));
-        });
-        Optional.ofNullable(user.getDeviceIp()).ifPresent((it) -> {
-            map.put("deviceIp", List.of(it));
-        });
-        Optional.ofNullable(user.getDeviceUserAgent()).ifPresent((it) -> {
-            map.put("deviceUserAgent", List.of(it));
-        });
-        Optional.ofNullable(user.getLoginType()).ifPresent((it) -> {
-            map.put("loginType", List.of(it.name()));
-        });
-
-        Optional.ofNullable(user.getAccessTokenTimeOut()).ifPresent((it) -> {
-            map.put("accessTokenTimeOut", List.of(String.valueOf(it)));
-        });
-
-        Optional.ofNullable(user.getRefreshTokenTimeOut()).ifPresent((it) -> {
-            map.put("refreshTokenTimeOut", List.of(String.valueOf(it)));
-        });
+        Authentication userAuthentication = new OAuth2Authentication(storedRequest, userAuthenticationToken);
+        OAuth2Authentication oAuth2Authentication = new OAuth2Authentication(storedRequest, userAuthentication);
 
 
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-        ResponseEntity<InvokerResult> response = restTemplate.postForEntity("http://127.0.0.1:" + port + "/oauth/token", request, InvokerResult.class);
+        //登录信息
+        final Map<String, Object> claims = BeanMap.create(loginModel);
+
+        //刷新令牌
+        DefaultOAuth2RefreshToken oAuth2RefreshToken = new DefaultOAuth2RefreshToken(this.tokenHelper.create(user.getId(), claims, loginModel.getRefreshTokenTimeOut() * 1000));
+
+
+        //访问令牌
+        DefaultOAuth2AccessToken oAuth2AccessToken = new DefaultOAuth2AccessToken(this.tokenHelper.create(user.getId(), claims, loginModel.getAccessTokenTimeOut() * 1000));
+        oAuth2AccessToken.setRefreshToken(oAuth2RefreshToken);
+        oAuth2AccessToken.setExpiration(new Date(dbHelper.getTime() + loginModel.getAccessTokenTimeOut() * 1000));
+
+
+        // 保存 redis
+        tokenStore.storeAccessToken(oAuth2AccessToken, oAuth2Authentication);
+        tokenStore.storeRefreshToken(oAuth2RefreshToken, oAuth2Authentication);
+
+        //记录token
+        this.storeUserToken(loginModel, oAuth2RefreshToken, oAuth2AccessToken);
+
 
         LoginTokenModel loginTokenModel = new LoginTokenModel();
-        BeanUtil.setBean(loginTokenModel, (Map) response.getBody().getContent());
+        loginTokenModel.setAccess_token(oAuth2AccessToken.getValue());
+        loginTokenModel.setRefresh_token(oAuth2RefreshToken.getValue());
+        loginTokenModel.setToken_type(oAuth2AccessToken.getTokenType());
+        loginTokenModel.setScope(null);
+        loginTokenModel.setExpires_in(oAuth2AccessToken.getExpiresIn());
         return loginTokenModel;
     }
 
+    /**
+     * 记录用户令牌
+     * @param loginModel
+     * @param oAuth2RefreshToken
+     * @param oAuth2AccessToken
+     */
+    private void storeUserToken(UserAuthLoginModel loginModel, DefaultOAuth2RefreshToken oAuth2RefreshToken, DefaultOAuth2AccessToken oAuth2AccessToken) {
+        final String refreshToken = oAuth2RefreshToken.getValue();
+        if (StringUtils.hasText(refreshToken) && !this.userTokenDao.existsByRefreshToken(refreshToken)) {
+            JWTUtil.JwtModel jwtModel = tokenHelper.parser(oAuth2RefreshToken.getValue());
+            final User user = User.build(jwtModel.getSubject());
+
+            // 用户令牌
+            UserToken userToken = new UserToken();
+            userToken.setUser(user);
+            userToken.setDeviceType(loginModel.getDeviceType());
+            userToken.setDeviceUUid(loginModel.getDeviceUUid());
+            userToken.setDeviceIp(loginModel.getDeviceIp());
+            userToken.setDeviceUserAgent(loginModel.getDeviceUserAgent());
+            userToken.setRefreshToken(refreshToken);
+            userToken.setClientId(loginModel.getClientId());
+            userToken.setTTL(jwtModel.getExpiration());
+            this.dbHelper.saveTime(userToken);
+            this.userTokenDao.insert(userToken);
+
+
+            //登录记录
+            UserLoginLog userLoginLog = new UserLoginLog();
+            BeanUtils.copyProperties(loginModel, userLoginLog);
+            userLoginLog.setUser(user);
+            userLoginLog.setAccessToken(oAuth2AccessToken.getValue());
+            userLoginLog.setRefreshToken(oAuth2RefreshToken.getValue());
+            this.dbHelper.saveTime(userLoginLog);
+            this.userLoginLogDao.insert(userLoginLog);
+        }
+    }
+
+
 }
+

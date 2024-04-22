@@ -1,12 +1,12 @@
 package test.rev;
 
 import com.github.microservice.components.activemq.constant.MQConstant;
+import jakarta.jms.Message;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
-import javax.jms.Message;
 
 @Slf4j
 @Component

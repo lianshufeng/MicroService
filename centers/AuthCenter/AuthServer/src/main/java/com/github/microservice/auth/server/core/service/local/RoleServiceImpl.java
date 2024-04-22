@@ -9,7 +9,6 @@ import com.github.microservice.auth.client.model.RoleModel;
 import com.github.microservice.auth.client.model.stream.RoleGroupStreamModel;
 import com.github.microservice.auth.client.model.stream.RoleGroupUserStreamModel;
 import com.github.microservice.auth.client.model.stream.RoleStreamModel;
-import com.github.microservice.auth.client.service.EnterpriseUserService;
 import com.github.microservice.auth.client.service.RoleService;
 import com.github.microservice.auth.client.type.AuthEventType;
 import com.github.microservice.auth.server.core.dao.*;
@@ -20,6 +19,7 @@ import com.github.microservice.core.util.bean.BeanUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,6 +36,7 @@ import java.util.stream.Stream;
 
 @Slf4j
 @Service
+@Primary
 public class RoleServiceImpl implements RoleService {
 
     @Autowired
@@ -51,36 +52,36 @@ public class RoleServiceImpl implements RoleService {
     private RoleGroupUserDao roleGroupUserDao;
 
     @Autowired
-    private EnterpriseUserService enterpriseUserService;
+    private OrganizationUserServiceImpl OrganizationUserService;
 
     @Autowired
     private AuthEventStreamHelper authEventStreamHelper;
 
     @Autowired
-    private EnterpriseDao enterpriseDao;
+    private OrganizationDao OrganizationDao;
 
     @Autowired
     private DBHelper dbHelper;
 
     private ResultContent<String> addRole(RoleModel roleModel) {
         //新增校验
-        if (!StringUtils.hasText(roleModel.getEnterpriseId())) {
-            return ResultContent.build(ResultState.EnterpriseNotNull);
+        if (!StringUtils.hasText(roleModel.getOrganizationId())) {
+            return ResultContent.build(ResultState.OrganizationNotNull);
         }
-        if (!this.enterpriseDao.existsById(roleModel.getEnterpriseId())) {
-            return ResultContent.build(ResultState.EnterpriseNotExist);
+        if (!this.OrganizationDao.existsById(roleModel.getOrganizationId())) {
+            return ResultContent.build(ResultState.OrganizationNotExist);
         }
 
         if (!StringUtils.hasText(roleModel.getName())) {
             return ResultContent.build(ResultState.RoleNameNotNull);
         }
-        if (this.roleDao.existsByEnterpriseAndName(Enterprise.build(roleModel.getEnterpriseId()), roleModel.getName())) {
+        if (this.roleDao.existsByOrganizationAndName(Organization.build(roleModel.getOrganizationId()), roleModel.getName())) {
             return ResultContent.build(ResultState.RoleExists);
         }
 
         //新增需要设置企业,创建角色必须包含企业
         Role role = new Role();
-        role.setEnterprise(Enterprise.build(roleModel.getEnterpriseId()));
+        role.setOrganization(Organization.build(roleModel.getOrganizationId()));
         return this.saveRole(roleModel, role);
     }
 
@@ -89,13 +90,9 @@ public class RoleServiceImpl implements RoleService {
         if (role == null) {
             return ResultContent.build(ResultState.RoleNotExists);
         }
-        //目标角色名存在
-        /*if (this.roleDao.existsByEnterpriseAndName(role.getEnterprise(), roleModel.getName())) {
-            return ResultContent.build(ResultState.RoleExists);
-        }*/
 
-        if (StringUtils.hasText(roleModel.getEnterpriseId()) && !role.getEnterprise().getId().equals(roleModel.getEnterpriseId())) {
-            return ResultContent.build(ResultState.RoleEnterpriseDoNotUpdate);
+        if (StringUtils.hasText(roleModel.getOrganizationId()) && !role.getOrganization().getId().equals(roleModel.getOrganizationId())) {
+            return ResultContent.build(ResultState.RoleOrganizationDoNotUpdate);
         }
         return this.saveRole(roleModel, role);
     }
@@ -118,7 +115,7 @@ public class RoleServiceImpl implements RoleService {
         final String roleId = role.getId();
         //仅修改角色才需要更新用户
         if (StringUtils.hasText(roleModel.getId())) {
-            this.updateEnterpriseUserFromRole(Set.of(roleModel.getId()));
+            this.updateOrganizationUserFromRole(Set.of(roleModel.getId()));
         }
 
         //发布事件
@@ -156,7 +153,7 @@ public class RoleServiceImpl implements RoleService {
             roleGroups.forEach((roleGroup) -> {
                 this.roleGroupDao.removeRole(roleGroup, Set.of(role));
             });
-            this.updateEnterpriseUserFromRoleGroup(roleGroups.stream().map(it -> it.getId()).collect(Collectors.toSet()));
+            this.updateOrganizationUserFromRoleGroup(roleGroups.stream().map(it -> it.getId()).collect(Collectors.toSet()));
             this.authEventStreamHelper.publish(new RoleStreamModel(
                     AuthEventType.Remove,
                     roleId
@@ -172,8 +169,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public ResultContent<RoleModel> getRoleByName(String roleName, String enterpriseId) {
-        Role role = roleDao.findTop1ByEnterpriseAndName(Enterprise.build(enterpriseId), roleName);
+    public ResultContent<RoleModel> getRoleByName(String roleName, String OrganizationId) {
+        Role role = roleDao.findTop1ByOrganizationAndName(Organization.build(OrganizationId), roleName);
         return ResultContent.buildContent(toRoleModel(role));
     }
 
@@ -182,23 +179,23 @@ public class RoleServiceImpl implements RoleService {
 
     private ResultContent<String> addRoleGroup(RoleGroupModel roleGroupModel) {
         //新增校验
-        if (!StringUtils.hasText(roleGroupModel.getEnterpriseId())) {
-            return ResultContent.build(ResultState.EnterpriseNotNull);
+        if (!StringUtils.hasText(roleGroupModel.getOrganizationId())) {
+            return ResultContent.build(ResultState.OrganizationNotNull);
         }
-        if (!this.enterpriseDao.existsById(roleGroupModel.getEnterpriseId())) {
-            return ResultContent.build(ResultState.EnterpriseNotExist);
+        if (!this.OrganizationDao.existsById(roleGroupModel.getOrganizationId())) {
+            return ResultContent.build(ResultState.OrganizationNotExist);
         }
 
         if (!StringUtils.hasText(roleGroupModel.getName())) {
             return ResultContent.build(ResultState.RoleGroupNameNotNull);
         }
-        if (this.roleGroupDao.existsByEnterpriseAndName(Enterprise.build(roleGroupModel.getEnterpriseId()), roleGroupModel.getName())) {
+        if (this.roleGroupDao.existsByOrganizationAndName(Organization.build(roleGroupModel.getOrganizationId()), roleGroupModel.getName())) {
             return ResultContent.build(ResultState.RoleGroupExists);
         }
 
         //新增需要设置企业,创建角色必须包含企业
         RoleGroup roleGroup = new RoleGroup();
-        roleGroup.setEnterprise(Enterprise.build(roleGroupModel.getEnterpriseId()));
+        roleGroup.setOrganization(Organization.build(roleGroupModel.getOrganizationId()));
         return this.saveRoleGroup(roleGroupModel, roleGroup);
     }
 
@@ -208,12 +205,12 @@ public class RoleServiceImpl implements RoleService {
             return ResultContent.build(ResultState.RoleGroupNotExists);
         }
         //目标角色名存在
-        /*if (this.roleGroupDao.existsByEnterpriseAndName(roleGroup.getEnterprise(), roleGroupModel.getName())) {
+        /*if (this.roleGroupDao.existsByOrganizationAndName(roleGroup.getOrganization(), roleGroupModel.getName())) {
             return ResultContent.build(ResultState.RoleGroupExists);
         }*/
 
-        if (StringUtils.hasText(roleGroupModel.getEnterpriseId()) && !roleGroup.getEnterprise().getId().equals(roleGroupModel.getEnterpriseId())) {
-            return ResultContent.build(ResultState.RoleGroupEnterpriseDoNotUpdate);
+        if (StringUtils.hasText(roleGroupModel.getOrganizationId()) && !roleGroup.getOrganization().getId().equals(roleGroupModel.getOrganizationId())) {
+            return ResultContent.build(ResultState.RoleGroupOrganizationDoNotUpdate);
         }
         return this.saveRoleGroup(roleGroupModel, roleGroup);
     }
@@ -243,7 +240,7 @@ public class RoleServiceImpl implements RoleService {
         final String roleGroupId = roleGroup.getId();
         //更新企业角色中的用户
         if (StringUtils.hasText(roleGroupModel.getId())) {
-            this.updateEnterpriseUserFromRoleGroup(Set.of(roleGroupId));
+            this.updateOrganizationUserFromRoleGroup(Set.of(roleGroupId));
         }
 
         //发布事件
@@ -271,7 +268,7 @@ public class RoleServiceImpl implements RoleService {
         }
 
         //企业id
-        final String enterpriseId = roleGroup.getEnterprise().getId();
+        final String OrganizationId = roleGroup.getOrganization().getId();
         //角色组中的用户
         final Set<String> users = this.roleGroupUserDao.findByRoleGroup(roleGroup).stream().map((it) -> it.getUser().getId()).collect(Collectors.toSet());
 
@@ -280,7 +277,7 @@ public class RoleServiceImpl implements RoleService {
         this.roleGroupUserDao.removeByRoleGroup(roleGroup);
         if (success) {
             //更新企业中的用户
-            this.updateEnterpriseUserFromUid(enterpriseId, users);
+            this.updateOrganizationUserFromUid(OrganizationId, users);
 
             this.authEventStreamHelper.publish(new RoleGroupStreamModel(
                     AuthEventType.Remove,
@@ -296,16 +293,16 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public ResultContent<RoleGroupModel> getRoleGroupByName(String roleGroupName, String enterpriseId) {
-        RoleGroup roleGroup = roleGroupDao.findTop1ByEnterpriseAndName(Enterprise.build(enterpriseId), roleGroupName);
+    public ResultContent<RoleGroupModel> getRoleGroupByName(String roleGroupName, String OrganizationId) {
+        RoleGroup roleGroup = roleGroupDao.findTop1ByOrganizationAndName(Organization.build(OrganizationId), roleGroupName);
         return ResultContent.buildContent(toRoleGroupModel(roleGroup));
     }
 
     @Override
-    public ResultContent<List<RoleGroupModel>> listRoleGroupFromEnterprise(String enterpriseId) {
+    public ResultContent<List<RoleGroupModel>> listRoleGroupFromOrganization(String OrganizationId) {
         return ResultContent.buildContent(
                 this.roleGroupDao
-                        .findByEnterprise(Enterprise.build(enterpriseId))
+                        .findByOrganization(Organization.build(OrganizationId))
                         .stream()
                         .map(it -> toRoleGroupModel(it))
                         .collect(Collectors.toSet()));
@@ -313,10 +310,10 @@ public class RoleServiceImpl implements RoleService {
 
 
     @Override
-    public ResultContent<List<RoleGroupModel>> findByIdentity(String enterpriseId, String[] identity) {
+    public ResultContent<List<RoleGroupModel>> findByIdentity(String OrganizationId, String[] identity) {
         return ResultContent.buildContent(
                 this.roleGroupDao
-                        .findByEnterpriseAndIdentityIn(Enterprise.build(enterpriseId), Set.of(identity))
+                        .findByOrganizationAndIdentityIn(Organization.build(OrganizationId), Set.of(identity))
                         .stream()
                         .map(it -> toRoleGroupModel(it))
                         .collect(Collectors.toSet())
@@ -335,7 +332,7 @@ public class RoleServiceImpl implements RoleService {
         boolean success = this.roleGroupDao.addRole(roleGroup, Arrays.stream(roleId).map(it -> Role.build(it)).collect(Collectors.toSet()));
         if (success) {
             //更新角色组
-            this.updateEnterpriseUserFromRoleGroup(Set.of(roleGroupId));
+            this.updateOrganizationUserFromRoleGroup(Set.of(roleGroupId));
             this.authEventStreamHelper.publish(new RoleGroupStreamModel(
                     AuthEventType.Modify,
                     roleGroupId
@@ -343,6 +340,7 @@ public class RoleServiceImpl implements RoleService {
         }
         return ResultContent.build(success);
     }
+
 
     @Override
     @Transactional
@@ -354,7 +352,7 @@ public class RoleServiceImpl implements RoleService {
         boolean success = this.roleGroupDao.removeRole(roleGroup, Arrays.stream(roleId).map(it -> Role.build(it)).collect(Collectors.toSet()));
         if (success) {
             //更新角色组
-            this.updateEnterpriseUserFromRoleGroup(Set.of(roleGroupId));
+            this.updateOrganizationUserFromRoleGroup(Set.of(roleGroupId));
             this.authEventStreamHelper.publish(new RoleGroupStreamModel(
                     AuthEventType.Modify,
                     roleGroupId
@@ -389,16 +387,16 @@ public class RoleServiceImpl implements RoleService {
         Arrays.stream(uid).forEach((u) -> {
             if (!this.roleGroupUserDao.existsByRoleGroupAndUser(roleGroup, User.build(u)) && this.userDao.existsById(u)) {
                 RoleGroupUser roleGroupUser = new RoleGroupUser();
-                roleGroupUser.setEnterprise(roleGroup.getEnterprise());
+                roleGroupUser.setOrganization(roleGroup.getOrganization());
                 roleGroupUser.setRoleGroup(roleGroup);
                 roleGroupUser.setUser(User.build(u));
-                this.roleGroupUserDao.save(roleGroupUser);
+                this.roleGroupUserDao.insert(roleGroupUser);
                 successUser.add(u);
             }
         });
 
         if (successUser.size() > 0) {
-            this.updateEnterpriseUserFromUid(roleGroup.getEnterprise().getId(),successUser);
+            this.updateOrganizationUserFromUid(roleGroup.getOrganization().getId(), successUser);
             this.authEventStreamHelper.publish(new RoleGroupUserStreamModel(
                     AuthEventType.Add,
                     roleGroupId,
@@ -407,6 +405,12 @@ public class RoleServiceImpl implements RoleService {
         }
 
         return ResultContent.buildContent(successUser);
+    }
+
+    @Override
+    public ResultContent<Set<String>> hasUserInRoleGroup(String roleGroupId, String[] uid) {
+        final List<RoleGroupUser> roleGroupUsers = this.roleGroupUserDao.findByRoleGroupAndUserIn(RoleGroup.build(roleGroupId), Stream.of(uid).map(it -> User.build(it)).toArray(User[]::new));
+        return ResultContent.buildContent(roleGroupUsers.stream().parallel().map(it -> it.getUser().getId()).collect(Collectors.toSet()));
     }
 
     @Override
@@ -423,7 +427,7 @@ public class RoleServiceImpl implements RoleService {
                 .map(it -> {
                     RoleGroupUser roleGroupUser = new RoleGroupUser();
                     RoleGroup roleGroup = roleGroupMap.get(it);
-                    roleGroupUser.setEnterprise(roleGroup.getEnterprise());
+                    roleGroupUser.setOrganization(roleGroup.getOrganization());
                     roleGroupUser.setRoleGroup(roleGroup);
                     roleGroupUser.setUser(User.build(uid));
                     return roleGroupUser;
@@ -432,9 +436,9 @@ public class RoleServiceImpl implements RoleService {
                 }).collect(Collectors.toSet());
         List<RoleGroupUser> success = this.roleGroupUserDao.saveAll(roleGroupUsers);
         if (success.size() > 0) {
-            Map<Enterprise, List<RoleGroupUser>> group = success.stream().collect(Collectors.groupingBy(RoleGroupUser::getEnterprise));
+            Map<Organization, List<RoleGroupUser>> group = success.stream().collect(Collectors.groupingBy(RoleGroupUser::getOrganization));
             group.forEach((key, value) -> {
-                this.updateEnterpriseUserFromUid(key.getId(), value.stream().map(it -> it.getUser().getId()).collect(Collectors.toList()));
+                this.updateOrganizationUserFromUid(key.getId(), value.stream().map(it -> it.getUser().getId()).collect(Collectors.toList()));
             });
             success.forEach(it -> {
                 this.authEventStreamHelper.publish(new RoleGroupUserStreamModel(
@@ -466,7 +470,7 @@ public class RoleServiceImpl implements RoleService {
         });
 
         if (successUser.size() > 0) {
-            this.updateEnterpriseUserFromUid(roleGroup.getEnterprise().getId(), successUser);
+            this.updateOrganizationUserFromUid(roleGroup.getOrganization().getId(), successUser);
             this.authEventStreamHelper.publish(new RoleGroupUserStreamModel(
                     AuthEventType.Remove,
                     roleGroupId,
@@ -486,15 +490,15 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public ResultContent<List<RoleGroupModel>> listRoleGroupFromEnterpriseUser(String enterpriseId, String uid) {
-        List<RoleGroupUser> list = this.roleGroupUserDao.findByEnterpriseAndUserIn(Enterprise.build(enterpriseId), User.build(uid));
-        if (CollectionUtils.isEmpty(list)){
+    public ResultContent<List<RoleGroupModel>> listRoleGroupFromOrganizationUser(String OrganizationId, String uid) {
+        List<RoleGroupUser> list = this.roleGroupUserDao.findByOrganizationAndUserIn(Organization.build(OrganizationId), User.build(uid));
+        if (CollectionUtils.isEmpty(list)) {
             return ResultContent.build(ResultState.Fail);
         }
         return ResultContent.buildContent(list
-                        .stream()
-                        .map(it -> toRoleGroupModel(it.getRoleGroup()))
-                        .collect(Collectors.toList())
+                .stream()
+                .map(it -> toRoleGroupModel(it.getRoleGroup()))
+                .collect(Collectors.toList())
         );
     }
 
@@ -506,8 +510,8 @@ public class RoleServiceImpl implements RoleService {
             roleGroupUserModel.setRoleGroup(roleGroup.getId());
         });
 
-        Optional.ofNullable(roleGroupUser.getEnterprise()).ifPresent((enterprise) -> {
-            roleGroupUserModel.setEnterprise(enterprise.getId());
+        Optional.ofNullable(roleGroupUser.getOrganization()).ifPresent((Organization) -> {
+            roleGroupUserModel.setOrganization(Organization.getId());
         });
 
         Optional.ofNullable(roleGroupUser.getUser()).ifPresent((user) -> {
@@ -523,7 +527,7 @@ public class RoleServiceImpl implements RoleService {
             return null;
         }
         RoleGroupModel roleGroupModel = new RoleGroupModel();
-        BeanUtils.copyProperties(roleGroup, roleGroupModel, "roles", "enterprise");
+        BeanUtils.copyProperties(roleGroup, roleGroupModel, "roles", "Organization");
 
         //角色
         Optional.ofNullable(roleGroup.getRoles()).ifPresent((roles) -> {
@@ -532,8 +536,8 @@ public class RoleServiceImpl implements RoleService {
 
 
         //企业
-        Optional.ofNullable(roleGroup.getEnterprise()).ifPresent((enterprise) -> {
-            roleGroupModel.setEnterpriseId(enterprise.getId());
+        Optional.ofNullable(roleGroup.getOrganization()).ifPresent((Organization) -> {
+            roleGroupModel.setOrganizationId(Organization.getId());
         });
 
 
@@ -549,41 +553,41 @@ public class RoleServiceImpl implements RoleService {
         BeanUtils.copyProperties(role, roleModel);
 
         //企业
-        Optional.ofNullable(role.getEnterprise()).ifPresent((enterprise) -> {
-            roleModel.setEnterpriseId(enterprise.getId());
+        Optional.ofNullable(role.getOrganization()).ifPresent((Organization) -> {
+            roleModel.setOrganizationId(Organization.getId());
         });
 
         return roleModel;
     }
 
 
-    private void updateEnterpriseUserFromRole(Collection<String> roleId) {
-        this.updateEnterpriseUserFromRoleGroup(
+    private void updateOrganizationUserFromRole(Collection<String> roleId) {
+        this.updateOrganizationUserFromRoleGroup(
                 this.roleGroupDao.findByRolesIn(roleId.stream().map(it -> Role.build(it)).collect(Collectors.toSet()))
                         .stream().map(it -> it.getId()).collect(Collectors.toSet())
         );
     }
 
 
-    private void updateEnterpriseUserFromRoleGroup(Collection<String> roleGroupId) {
+    private void updateOrganizationUserFromRoleGroup(Collection<String> roleGroupId) {
         //查询所有的角色组与用户的关系
         List<RoleGroupUser> roleGroupUsers = this.roleGroupUserDao.findByRoleGroupIn(roleGroupId.stream().map(it -> RoleGroup.build(it)).collect(Collectors.toSet()));
-        Map<Enterprise, List<RoleGroupUser>> ret = roleGroupUsers.stream().collect(Collectors.groupingBy(RoleGroupUser::getEnterprise, Collectors.toList()));
+        Map<Organization, List<RoleGroupUser>> ret = roleGroupUsers.stream().collect(Collectors.groupingBy(RoleGroupUser::getOrganization, Collectors.toList()));
         ret.entrySet().forEach((entry) -> {
-            this.updateEnterpriseUserFromUid(entry.getKey().getId(), entry.getValue().stream().map(it -> it.getUser().getId()).collect(Collectors.toSet()));
+            this.updateOrganizationUserFromUid(entry.getKey().getId(), entry.getValue().stream().map(it -> it.getUser().getId()).collect(Collectors.toSet()));
         });
     }
 
 
-    private void updateEnterpriseUserFromUid(final String enterpriseId, final Collection<String> uid) {
-        if (!StringUtils.hasText(enterpriseId)) {
+    private void updateOrganizationUserFromUid(final String OrganizationId, final Collection<String> uid) {
+        if (!StringUtils.hasText(OrganizationId)) {
             return;
         }
         if (uid == null || uid.size() == 0) {
             return;
         }
         //同步用户信息
-        this.enterpriseUserService.update(enterpriseId, uid.toArray(new String[0]));
+        this.OrganizationUserService.update(OrganizationId, uid.toArray(new String[0]));
     }
 
 

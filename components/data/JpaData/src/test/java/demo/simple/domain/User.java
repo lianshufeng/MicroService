@@ -1,10 +1,10 @@
 package demo.simple.domain;
 
 import com.github.microservice.components.data.jpa.domain.SuperEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
 
 /**
  * 数据库实体

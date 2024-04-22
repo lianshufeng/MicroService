@@ -1,8 +1,7 @@
 package com.github.microservice.auth.client.model;
 
 import com.github.microservice.auth.client.example.ExampleConstant;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.Set;
@@ -12,28 +11,28 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@ApiModel(value = "roleModel", description = "角色模型")
+@Schema(name = "roleModel", description = "角色模型")
 public class RoleModel {
 
     //角色id
-    @ApiModelProperty(name = "id", required = false, example = ExampleConstant.RoleId)
+    @Schema(name = "id", required = false, example = ExampleConstant.RoleId)
     private String id;
 
     //角色名
-    @ApiModelProperty(name = "name", required = false, example = ExampleConstant.RoleName)
+    @Schema(name = "name", required = false, example = ExampleConstant.RoleName)
     private String name;
 
     //备注
-    @ApiModelProperty(name = "remark", required = false)
+    @Schema(name = "remark", required = false)
     private String remark;
 
     //权限列表
-    @ApiModelProperty(name = "auth", required = false, example = ExampleConstant.AuthName)
+    @Schema(name = "auth", required = false, example = "[\"listUser\",\"callPhone\"]")
     private Set<String> auth;
 
-    //企业id
-    @ApiModelProperty(name = "enterpriseId", required = true, example = ExampleConstant.EnterpriseId)
-    private String enterpriseId;
+    //机构id
+    @Schema(name = "organizationId", required = true, example = ExampleConstant.OrganizationId)
+    private String organizationId;
 
 
 }

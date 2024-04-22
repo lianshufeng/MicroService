@@ -3,7 +3,7 @@ version: "3"
 services:
 
   consul_node0:
-    image: consul
+    image: consul:1.15
     ports:
       - "8500:8500"
       - "8600:8600/udp"
@@ -14,7 +14,7 @@ services:
     command: "consul agent -server -ui -bootstrap-expect=3 -node=consul_node0 -data-dir /data -client 0.0.0.0 -datacenter=dc1"
 
   consul_node1:
-    image: consul
+    image: consul:1.15
     ports:
       - "8501:8500"
       - "8601:8600/udp"
@@ -27,7 +27,7 @@ services:
       - consul_node0
 
   consul_node2:
-    image: consul
+    image: consul:1.15
     ports:
       - "8502:8500"
       - "8602:8600/udp"

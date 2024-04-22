@@ -61,18 +61,20 @@ public class FeignConfig {
         return new OptionalDecoder(new ResponseEntityDecoder(springDecoder()));
     }
 
+//
+//    @Bean
+//    @ConditionalOnClass(name = "org.springframework.data.domain.Page")
+//    public Module pageJacksonModule() {
+//        return new PageJacksonModule();
+//    }
 
-    @Bean
-    @ConditionalOnClass(name = "org.springframework.data.domain.Page")
-    public Module pageJacksonModule() {
-        return new PageJacksonModule();
-    }
 
-    @Bean
-    @ConditionalOnClass(name = "org.springframework.data.domain.Page")
-    public Module sortModule() {
-        return new SortJacksonModule();
-    }
+
+//    @Bean
+//    @ConditionalOnClass(name = "org.springframework.data.domain.Page")
+//    public Module sortModule() {
+//        return new SortJacksonModule();
+//    }
 
 
     @Bean

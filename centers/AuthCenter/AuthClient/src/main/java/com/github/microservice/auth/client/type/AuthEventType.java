@@ -14,6 +14,8 @@ public enum AuthEventType {
 
     Remove("删除"),
 
+    UnRegister("注销"),
+
     ;
 
     @Getter

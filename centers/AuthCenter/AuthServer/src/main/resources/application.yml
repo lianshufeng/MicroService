@@ -17,18 +17,21 @@ spring:
         instance-id: ${spring.application.name}:${server.port}
       host: ${ApplicationCenter.url}
       port: ${ApplicationCenter.port}
+
+
     #kafka
     stream:
       kafka:
         binder:
           brokers: ${Kafka.brokers}
           replication-factor: 1
-      function:
-        definition: userLogStreamConsumer
       bindings:
         userLogStreamConsumer-in-0:
           destination: UserLogStream
           group: ${project.artifactId}
+    function: #注意：此处有调整
+      definition: userLogStreamConsumer
+
     bus:
       enabled: true
   #配置zipkin链路追踪客户端
@@ -41,8 +44,12 @@ spring:
     sampler:
       probability: ${Zipkin.sampler.probability}
 
-
-
+  thymeleaf:
+    suffix: .html
+    mode: HTML
+    prefix: classpath:/templates/
+    cache: false
+    encoding: UTF-8
 
 
 
@@ -52,4 +59,3 @@ spring:
 logging:
   file:
     name: logs/${project.artifactId}.log
-#debug: true

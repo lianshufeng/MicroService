@@ -3,17 +3,18 @@ package com.github.microservice.auth.security.helper;
 import com.github.microservice.auth.client.constant.AuthConstant;
 import com.github.microservice.auth.client.content.ResultContent;
 import com.github.microservice.auth.client.content.ResultState;
-import com.github.microservice.auth.client.event.cache.EnterpriseUserCacheCreateEvent;
-import com.github.microservice.auth.client.model.EnterpriseUserModel;
+import com.github.microservice.auth.client.event.cache.OrganizationUserCacheCreateEvent;
+import com.github.microservice.auth.client.model.OrganizationUserModel;
 import com.github.microservice.auth.client.model.UserModel;
 import com.github.microservice.auth.client.model.UserTokenModel;
-import com.github.microservice.auth.client.service.EnterpriseUserService;
+import com.github.microservice.auth.client.service.OrganizationUserService;
 import com.github.microservice.auth.client.service.UserService;
-import com.github.microservice.auth.security.annotations.ResourceAuth;
 import com.github.microservice.auth.security.cache.AuthClientUserTokenCache;
 import com.github.microservice.auth.security.model.*;
 import com.github.microservice.auth.security.type.AuthType;
 import com.github.microservice.core.util.net.IPUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,8 +41,8 @@ public class AuthClientSecurityAuthenticationHelper {
     //令牌的关键词
     private static final String[] UserTokenName = new String[]{"accesstoken", "accessToken", "_uToken", "uToken"};
 
-    //企业id
-    private static final String[] EnterPriseName = new String[]{"epid", "enterPriseId", "epId", "enterpriseId"};
+    //机构id
+    private static final String[] OrgName = new String[]{"oid", "epid", "enterPriseId", "epId", "enterpriseId"};
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -58,7 +57,7 @@ public class AuthClientSecurityAuthenticationHelper {
     private UserService userService;
 
     @Autowired
-    private EnterpriseUserService enterpriseUserService;
+    private OrganizationUserService organizationUserService;
 
     @Autowired
     private AuthHelper authHelper;
@@ -74,14 +73,14 @@ public class AuthClientSecurityAuthenticationHelper {
         //获取用户令牌
         String uToken = getUserToken();
 
-        //获取企业令牌
-        String epId = getEnterPriseId();
+        //获取机构id
+        String oid = getOrgId();
 
 
         log.debug("[uToken] : {}  -> url : {} -> UA : {} -> ip : {}", uToken, httpServletRequest.getRequestURL(), httpServletRequest.getHeader("user-agent"), IPUtil.getRemoteIp(httpServletRequest));
 
         //设置登录用户
-        setCurrentUserParm(uToken, epId);
+        setCurrentUserParm(uToken, oid);
 
     }
 
@@ -90,48 +89,49 @@ public class AuthClientSecurityAuthenticationHelper {
      * 设置当前用户
      *
      * @param uToken
-     * @param epId
+     * @param oid
      */
-    private void setCurrentUserParm(final String uToken, final String epId) {
+    private void setCurrentUserParm(final String uToken, final String oid) {
         //缓存用户信息
-        EnterpriseUserCacheItem userAutTokenCacheItem = cacheUserToken(uToken);
+        OrganizationUserCacheItem userAutTokenCacheItem = cacheUserToken(uToken);
         if (userAutTokenCacheItem == null) {
             return;
         }
 
-        //缓存企业信息
-        this.cacheEnterPrise(userAutTokenCacheItem, epId);
+        //缓存机构信息
+        this.cacheOrg(userAutTokenCacheItem, oid);
 
 
         //设置spring的权限
-        this.setUserAuthentication(userAutTokenCacheItem, epId);
+        this.setUserAuthentication(userAutTokenCacheItem, oid);
 
     }
 
-    //
-//    /**
-//     * 缓存企业信息
-//     */
-    private void cacheEnterPrise(EnterpriseUserCacheItem item, String epId) {
-        //没有企业id
-        if (!StringUtils.hasText(epId)) {
+    /**
+     * 缓存机构
+     * @param item
+     * @param oid
+     */
+    private void cacheOrg(OrganizationUserCacheItem item, String oid) {
+        //没有机构id
+        if (!StringUtils.hasText(oid)) {
             return;
         }
 
-        //有缓存则直接不缓存企业信息
-        if (item.containsEnterPrise(epId)) {
+        //有缓存则直接不缓存机构信息
+        if (item.containsOrganization(oid)) {
             return;
         }
 
-        ResultContent<EnterpriseUserModel> enterpriseUserModelResultContent = this.enterpriseUserService.get(epId, item.getUid());
-        if (enterpriseUserModelResultContent == null || enterpriseUserModelResultContent.getState() != ResultState.Success) {
+        ResultContent<OrganizationUserModel> organizationUserModelResultContent = this.organizationUserService.get(oid, item.getUid());
+        if (organizationUserModelResultContent == null || organizationUserModelResultContent.getState() != ResultState.Success) {
             return;
         }
-        Optional.ofNullable(enterpriseUserModelResultContent.getContent()).ifPresent((enterpriseUserModel) -> {
-            EnterpriseUserCacheModel newEnterpriseUserModel = new EnterpriseUserCacheModel();
-            BeanUtils.copyProperties(enterpriseUserModel, newEnterpriseUserModel);
-            applicationContext.publishEvent(new EnterpriseUserCacheCreateEvent(newEnterpriseUserModel));
-            item.putEnterPrise(epId, newEnterpriseUserModel);
+        Optional.ofNullable(organizationUserModelResultContent.getContent()).ifPresent((organizationUserModel) -> {
+            OrganizationUserCacheModel newOrganizationUserCacheModel = new OrganizationUserCacheModel();
+            BeanUtils.copyProperties(organizationUserModel, newOrganizationUserCacheModel);
+            applicationContext.publishEvent(new OrganizationUserCacheCreateEvent(newOrganizationUserCacheModel));
+            item.putOrganization(oid, newOrganizationUserCacheModel);
         });
     }
 
@@ -142,24 +142,24 @@ public class AuthClientSecurityAuthenticationHelper {
      * @param uToken
      * @return
      */
-    private EnterpriseUserCacheItem cacheUserToken(String uToken) {
+    private OrganizationUserCacheItem cacheUserToken(String uToken) {
         if (!StringUtils.hasText(uToken)) {
             return null;
         }
 
         //通过缓存读取
-        EnterpriseUserCacheItem userAutTokenCacheItem = this.authClientUserTokenCache.get(uToken);
+        OrganizationUserCacheItem userAutTokenCacheItem = this.authClientUserTokenCache.get(uToken);
         if (userAutTokenCacheItem != null) {
             return userAutTokenCacheItem;
         }
 
         //创建新的缓存
-        final EnterpriseUserCacheItem newUserAutTokenCacheItem = new EnterpriseUserCacheItem();
+        final OrganizationUserCacheItem newUserAutTokenCacheItem = new OrganizationUserCacheItem();
 
         //用户令牌信息
         ResultContent<UserTokenModel> userTokenModelResultContent = this.userService.queryToken(uToken);
         if (userTokenModelResultContent == null || userTokenModelResultContent.getState() != ResultState.Success) {
-            log.error(" {} -> {}", uToken, userTokenModelResultContent.getState());
+            log.error(" {} -> {}", uToken, userTokenModelResultContent);
             return null;
         }
 
@@ -179,13 +179,13 @@ public class AuthClientSecurityAuthenticationHelper {
             BeanUtils.copyProperties(userModel, newUserAutTokenCacheItem);
         });
 
-        //设置所有的附属企业
-        ResultContent<Page<String>> enterpriseUserModelPage = this.enterpriseUserService.affiliatesEnterprise(uid, PageRequest.of(0, 9999, Sort.by("createTime")));
+        //设置所有的附属机构
+        ResultContent<Page<String>> organizationUserModelPage = this.organizationUserService.affiliatesOrganization(uid, PageRequest.of(0, 9999, Sort.by("createTime")));
         if (userModelResultContent == null || userModelResultContent.getState() != ResultState.Success) {
             return null;
         }
-        Optional.ofNullable(enterpriseUserModelPage.getContent().getContent()).ifPresent((epIds) -> {
-            newUserAutTokenCacheItem.setAffiliatesEnterprise(new HashSet<>(epIds));
+        Optional.ofNullable(organizationUserModelPage.getContent().getContent()).ifPresent((oids) -> {
+            newUserAutTokenCacheItem.setAffiliatesOrganization(new HashSet<>(oids));
         });
 
 
@@ -197,7 +197,7 @@ public class AuthClientSecurityAuthenticationHelper {
     /**
      * 设置当前用户的权限
      */
-    private void setUserAuthentication(final EnterpriseUserCacheItem cacheItem, final String epId) {
+    private void setUserAuthentication(final OrganizationUserCacheItem cacheItem, final String oid) {
         if (cacheItem == null) {
             return;
         }
@@ -216,23 +216,23 @@ public class AuthClientSecurityAuthenticationHelper {
         }};
 
 
-        //没有企业id
-        if (!StringUtils.hasText(epId)) {
+        //没有机构id
+        if (!StringUtils.hasText(oid)) {
             setAuthentication(resourceAuthModels, authDetails);
             return;
         }
 
 
-        //合并用户在企业中的权限
-        Optional.ofNullable(cacheItem.getEnterprise(epId)).ifPresent((enterpriseUserModel) -> {
-            resourceAuthModels.addAll(enterpriseUserModel.getAuth().stream().map((it) -> {
+        //合并用户在机构中的权限
+        Optional.ofNullable(cacheItem.getOrganization(oid)).ifPresent((organizationUserCacheModel) -> {
+            resourceAuthModels.addAll(organizationUserCacheModel.getAuth().stream().map((it) -> {
                 return ResourceAuthModel
                         .builder()
-                        .authType(enterpriseUserModel.getAuthType()) // 根据类型确定是企业权限还是平台权限
+                        .authType(organizationUserCacheModel.getAuthType()) // 类型
                         .name(it)
                         .build();
             }).collect(Collectors.toSet()));
-            BeanUtils.copyProperties(enterpriseUserModel, authDetails);
+            BeanUtils.copyProperties(organizationUserCacheModel, authDetails);
         });
 
         setAuthentication(resourceAuthModels, authDetails);
@@ -245,7 +245,7 @@ public class AuthClientSecurityAuthenticationHelper {
      * @param authDetails
      */
     private void setAuthentication(final Set<ResourceAuthModel> resourceAuthModels, final AuthDetails authDetails) {
-        //整合在当前企业里的权限集合
+        //整合在当前机构里的权限集合
         final List<GrantedAuthority> authorities = resourceAuthModels.stream().map((it) -> {
             return new SimpleGrantedAuthority(it.getAuthType().makeAuthName(it.getName()));
         }).collect(Collectors.toList());
@@ -277,12 +277,12 @@ public class AuthClientSecurityAuthenticationHelper {
 
 
     /**
-     * 获取企业id
+     * 获取机构id
      *
      * @return
      */
-    public String getEnterPriseId() {
-        return getParameter(EnterPriseName);
+    public String getOrgId() {
+        return getParameter(OrgName);
     }
 
 

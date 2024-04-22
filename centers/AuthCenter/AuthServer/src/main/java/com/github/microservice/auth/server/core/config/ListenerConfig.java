@@ -24,7 +24,7 @@ public class ListenerConfig {
     private AccessTokenMessageListener accessTokenMessageListener;
 
 
-    @Value("${spring.redis.database}")
+    @Value("${spring.data.redis.database}")
     private Integer dbNumber;
 
 

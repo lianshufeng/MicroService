@@ -2,7 +2,7 @@ package com.github.microservice.auth.security.cache;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.microservice.auth.security.model.EnterpriseUserCacheItem;
+import com.github.microservice.auth.security.model.OrganizationUserCacheItem;
 import com.github.microservice.auth.security.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class AuthClientUserTokenCache {
 
 
     //缓存
-    private Cache<String, EnterpriseUserCacheItem> cache;
+    private Cache<String, OrganizationUserCacheItem> cache;
 
 
     @Autowired
@@ -59,7 +59,7 @@ public class AuthClientUserTokenCache {
      * 用户缓存 ，用户中心的id
      */
     public void cleanUserCache(String... uid) {
-        Map<String, Set<EnterpriseUserCacheItem>> items = this.findUserByUid(uid);
+        Map<String, Set<OrganizationUserCacheItem>> items = this.findUserByUid(uid);
         if (items == null) {
             return;
         }
@@ -83,17 +83,17 @@ public class AuthClientUserTokenCache {
      *
      * @param uid
      */
-    public Map<String, Set<EnterpriseUserCacheItem>> findUserByUid(String... uid) {
+    public Map<String, Set<OrganizationUserCacheItem>> findUserByUid(String... uid) {
         if (uid == null || uid.length == 0) {
             return null;
         }
         //缓存map
-        final Map<String, EnterpriseUserCacheItem> cacheMap = this.cache.asMap();
-        Map<String, Set<EnterpriseUserCacheItem>> ret = new HashMap<>();
+        final Map<String, OrganizationUserCacheItem> cacheMap = this.cache.asMap();
+        Map<String, Set<OrganizationUserCacheItem>> ret = new HashMap<>();
         for (String u : uid) {
-            Set<EnterpriseUserCacheItem> userAutTokenCacheItems = ret.get(u);
+            Set<OrganizationUserCacheItem> userAutTokenCacheItems = ret.get(u);
             if (userAutTokenCacheItems == null) {
-                userAutTokenCacheItems = new HashSet<EnterpriseUserCacheItem>();
+                userAutTokenCacheItems = new HashSet<OrganizationUserCacheItem>();
                 ret.put(u, userAutTokenCacheItems);
             }
 
@@ -101,8 +101,8 @@ public class AuthClientUserTokenCache {
             for (Object item : cacheMap.entrySet()) {
                 Map.Entry entry = (Map.Entry) item;
                 Object value = entry.getValue();
-                if (value != null && value instanceof EnterpriseUserCacheItem) {
-                    EnterpriseUserCacheItem cacheItem = (EnterpriseUserCacheItem) value;
+                if (value != null && value instanceof OrganizationUserCacheItem) {
+                    OrganizationUserCacheItem cacheItem = (OrganizationUserCacheItem) value;
                     if (u.equals(cacheItem.getUid())) {
                         userAutTokenCacheItems.add(cacheItem);
                     }
@@ -116,11 +116,11 @@ public class AuthClientUserTokenCache {
     /**
      * 取出缓存
      */
-    public EnterpriseUserCacheItem get(String uToken) {
+    public OrganizationUserCacheItem get(String uToken) {
         if (!StringUtils.hasText(uToken)) {
             return null;
         }
-        EnterpriseUserCacheItem item = this.me.readCache(uToken);
+        OrganizationUserCacheItem item = this.me.readCache(uToken);
         if (item == null) {
             return null;
         }
@@ -139,7 +139,7 @@ public class AuthClientUserTokenCache {
      * @return
      */
 //    @CachePut(value = CacheName, key = "#uToken")
-    public EnterpriseUserCacheItem put(String uToken, EnterpriseUserCacheItem t) {
+    public OrganizationUserCacheItem put(String uToken, OrganizationUserCacheItem t) {
         log.debug("Put Cache : {}", t.getAccessToken());
         this.cache.put(uToken, t);
         return t;
@@ -149,10 +149,10 @@ public class AuthClientUserTokenCache {
      * 取出缓存
      */
 //    @Cacheable(value = CacheName, key = "#uToken")
-    public EnterpriseUserCacheItem readCache(String uToken) {
+    public OrganizationUserCacheItem readCache(String uToken) {
         Object item = this.cache.getIfPresent(uToken);
-        if (item instanceof EnterpriseUserCacheItem) {
-            return (EnterpriseUserCacheItem) item;
+        if (item instanceof OrganizationUserCacheItem) {
+            return (OrganizationUserCacheItem) item;
         }
         log.debug("Miss Cache : {}", uToken);
         return null;

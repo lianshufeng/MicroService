@@ -15,14 +15,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @NoArgsConstructor
 @CompoundIndexes({
-        @CompoundIndex(name = "enterprise_roleGroup_user_unique", def = "{enterprise:1, roleGroup:1, user:1}", unique = true)
+        @CompoundIndex(name = "organization_roleGroup_user_unique", def = "{organization:1, roleGroup:1, user:1}", unique = true)
 })
 public class RoleGroupUser extends SuperEntity {
 
     //企业
     @Indexed
     @DBRef(lazy = true)
-    private Enterprise enterprise;
+    private Organization organization;
 
     //角色组
     @Indexed
@@ -45,7 +45,7 @@ public class RoleGroupUser extends SuperEntity {
      * @return
      */
     public static RoleGroupUser build(String epId, String roleGroupId, String uid) {
-        return build(Enterprise.build(epId), RoleGroup.build(roleGroupId), User.build(uid));
+        return build(Organization.build(epId), RoleGroup.build(roleGroupId), User.build(uid));
     }
 
     /**
@@ -54,8 +54,8 @@ public class RoleGroupUser extends SuperEntity {
      * @param user
      * @return
      */
-    public static RoleGroupUser build(Enterprise enterprise, RoleGroup roleGroup, User user) {
-        return RoleGroupUser.builder().enterprise(enterprise).roleGroup(roleGroup).user(user).build();
+    public static RoleGroupUser build(Organization organization, RoleGroup roleGroup, User user) {
+        return RoleGroupUser.builder().organization(organization).roleGroup(roleGroup).user(user).build();
     }
 
 }
