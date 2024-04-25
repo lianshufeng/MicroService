@@ -12,7 +12,7 @@ public class RandomUtil {
      * @param max
      * @return
      */
-    public int nextInt(int min, int max) {
+    public static int nextInt(int min, int max) {
         return new Random().nextInt((max - min) + 1) + min;
     }
 
