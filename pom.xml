@@ -43,7 +43,8 @@
 <!--        <module>application/BatchCollection</module>-->
 
 
-        <module>demo/auth</module>
+
+<!--        <module>application/CloudGame</module>-->
 
     </modules>
 
