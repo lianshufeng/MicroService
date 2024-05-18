@@ -31,7 +31,7 @@
         <!-- spring boot  -->
         <spring-boot.version>3.2.4</spring-boot.version>
         <!-- spring mvc -->
-        <spring-mvc.version>6.1.4</spring-mvc.version>
+        <spring-mvc.version>6.1.6</spring-mvc.version>
         <spring-integration-core.version>6.2.2</spring-integration-core.version>
 
         <!-- spring cloud -->
