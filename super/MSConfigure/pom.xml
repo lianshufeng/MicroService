@@ -51,7 +51,7 @@
         <spring-data-jpa.version>3.2.4</spring-data-jpa.version>
 
         <!-- 其他库 -->
-        <groovy.version>4.0.18</groovy.version>
+        <groovy.version>4.0.21</groovy.version>
         <ehcache.version>3.10.8</ehcache.version>
         <caffeine.version>3.1.8</caffeine.version>
         <lombok.version>1.18.30</lombok.version>
